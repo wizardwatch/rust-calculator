@@ -1,4 +1,46 @@
+#[macro_use]
+extern crate kiss_ui;
+extern crate kiss3d;
+extern crate nalgebra as na;
+extern crate num;
+
+use kiss_ui::prelude::*;
+use kiss_ui::container::*;
+use kiss_ui::dialog::Dialog;
+use kiss_ui::text::*;
+use kiss_ui::button::*;
+use kiss3d::light::Light;
+use kiss3d::window::Window;
+use na::Point3;
+
+
 fn main(){
+        kiss_ui::show_gui(|| {
+            Dialog::new(
+                Vertical::new(
+                    children![
+                    Label::new("Enter a message:"),
+                    TextBox::new()
+                        .set_visible_columns(20)
+                        .set_name("equ_raw"),
+                    TextBox::new()
+                        .set_visible_columns(20)
+                        .set_name("min"),
+                    TextBox::new()
+                        .set_visible_columns(20)
+                        .set_name("max"),
+                    TextBox::new()
+                        .set_visible_columns(20)
+                        .set_name("rate"),
+                    Button::new()
+                        .set_label("Graph")
+                        .set_onclick(show_alert_message),
+                ]
+                )
+            )
+                .set_title("Hello, world!")
+                .set_size_pixels(640, 480)
+        });
     use std::io;
     let mut input = String::new();
     println!("input equation");
@@ -8,17 +50,28 @@ fn main(){
         },
         Err(e) => println!("input failed. Please report to github.")
     }
-
-    graph(input);
 }
 
-fn graph(input: String){
-    extern crate kiss3d;
-    extern crate nalgebra as na;
-    solve_string( input);
-    use kiss3d::light::Light;
-    use kiss3d::window::Window;
-    use na::Point3;
+fn show_alert_message(clicked: Button) {
+    println!("I have awoken?");
+    let dialog = clicked.get_dialog().unwrap();
+    let text_box1 = dialog.get_child("equ_raw").unwrap()
+        .try_downcast::<TextBox>().ok().expect("child equ_raw was not a TextBox!");
+    let equ = text_box1.get_text();
+    let text_box2 = dialog.get_child("min").unwrap()
+        .try_downcast::<TextBox>().ok().expect("child min was not a TextBox!");
+    let min = text_box2.get_text();
+    let text_box3 = dialog.get_child("max").unwrap()
+        .try_downcast::<TextBox>().ok().expect("child max was not a TextBox!");
+    let max = text_box3.get_text();
+    let text_box4 = dialog.get_child("rate").unwrap()
+        .try_downcast::<TextBox>().ok().expect("child rate was not a TextBox!");
+    let rate = text_box4.get_text();
+    graph(equ.to_string(), min.to_string(), max.to_string(), rate.to_string());
+}
+
+fn graph(equation: String, min: String, max: String, rate: String){
+    solve_string(equation);
     let mut corda;
     let mut cordb;
     let boxx = [0.0, 0.0, 0.0, 0.0];
@@ -30,7 +83,7 @@ fn graph(input: String){
     let mut window = Window::new("Kiss3d: lines");
     window.set_light(Light::StickToCamera);
     while window.render() {
-        //makes refrence
+        //makes reference
         for i in  1..boxx.len(){
             let bx = boxx[i];
             let by = boxy[i];
@@ -82,10 +135,10 @@ fn solve_string(input :String){
             operator_places.push(subtraction);
         }
     }
-    for i in 0..opperator_places.len() {
+    for i in 0..operator_places.len() {
         let beforeplaces = 0;
         let afterplaces = 1;
-        let current_operator = opperator_places[i];
+        let current_operator = operator_places[i];
         //let current_operator_pos = (input.index(current_operator));
     }
     //return exampleoutput1;
