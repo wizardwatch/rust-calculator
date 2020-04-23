@@ -54,7 +54,7 @@ fn graph(input: String){
     }
 }
 fn solve_string(input :String){
-    let mut opperator_places = vec![];
+    let mut operator_places = vec![];
     let exponent = "^";
     let multiplication = "*";
     let division = "/";
@@ -64,29 +64,29 @@ fn solve_string(input :String){
     for i in 1..input.len(){
         let mut current_letter = &input[i..i+1];
         if current_letter == exponent{
-            opperator_places.push(exponent);
+            operator_places.push(exponent);
         }
         else if current_letter == multiplication{
-            opperator_places.push(multiplication);
+            operator_places.push(multiplication);
         }
 
         else if current_letter == division{
-            opperator_places.push(division);
+            operator_places.push(division);
         }
 
         else if current_letter == addition{
-            opperator_places.push(addition);
+            operator_places.push(addition);
         }
 
         else if current_letter == subtraction{
-            opperator_places.push(subtraction);
+            operator_places.push(subtraction);
         }
     }
     for i in 0..opperator_places.len() {
         let beforeplaces = 0;
         let afterplaces = 1;
         let current_operator = opperator_places[i];
-        let current_operator_pos = (input.index(current_operator));
+        //let current_operator_pos = (input.index(current_operator));
     }
     //return exampleoutput1;
 }
