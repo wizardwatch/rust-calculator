@@ -32,9 +32,6 @@ fn graph(input: String){
     while window.render() {
         //makes refrence
         for i in  1..boxx.len(){
-            let ax = boxx[i-1];
-            let ay = boxy[i-1];
-            let az = boxz[i-1];
             let bx = boxx[i];
             let by = boxy[i];
             let bz = boxz[i];
@@ -55,14 +52,41 @@ fn graph(input: String){
             window.draw_line(&corda, &cordb, &Point3::new(1.0, 0.0, 0.0));
         }
     }
-
 }
 fn solve_string(input :String){
+    let mut opperator_places = vec![];
     let exponent = "^";
     let multiplication = "*";
     let division = "/";
     let addition = "+";
     let subtraction = "#";
     // code here
+    for i in 1..input.len(){
+        let mut current_letter = &input[i..i+1];
+        if current_letter == exponent{
+            opperator_places.push(exponent);
+        }
+        else if current_letter == multiplication{
+            opperator_places.push(multiplication);
+        }
+
+        else if current_letter == division{
+            opperator_places.push(division);
+        }
+
+        else if current_letter == addition{
+            opperator_places.push(addition);
+        }
+
+        else if current_letter == subtraction{
+            opperator_places.push(subtraction);
+        }
+    }
+    for i in 0..opperator_places.len() {
+        let beforeplaces = 0;
+        let afterplaces = 1;
+        let current_operator = opperator_places[i];
+        let current_operator_pos = (input.index(current_operator));
+    }
     //return exampleoutput1;
 }
