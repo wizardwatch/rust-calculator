@@ -92,7 +92,17 @@ fn repeater(equation: String, min: String, max: String, rate: String){
     let mut equNew:String = "owo".to_string();
     while !(i > (fmax)) {
         equNew = replace(i, equRaw.to_string());
-        solve_string(equNew.to_string());
+        x.append(i);
+        result = solve_string(equNew.to_string());
+        /*
+        if(result == imaginary){
+            z.append(imaginary portion)
+            y.append(real portion)
+        }else{
+            z.append(0)
+            y.append(result)
+        }
+        */
         i = i + frate;
     }
 }
