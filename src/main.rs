@@ -12,9 +12,14 @@ use kiss_ui::button::*;
 use kiss3d::light::Light;
 use kiss3d::window::Window;
 use na::Point3;
+use std::borrow::Borrow;
+
 
 
 fn main(){
+    let x = [];
+    let y = [];
+    let z = [];
         kiss_ui::show_gui(|| {
             Dialog::new(
                 Grid::new(
@@ -50,11 +55,10 @@ fn main(){
         Ok(_) => {
             println!("input received")
         },
-        Err(e) => println!("input failed. Please report to github.")
+        Err(e) => println!("input faiwed owO. Pwease repowt to github uwu.")
     }
 }
-
-fn replace(current: u32, equRaw: String) -> String {
+fn replace(current: f64, equRaw: String) -> String {
     let mut equNew:String = "owo".to_string();
     let equRaw2 = &equRaw;
     let replacewith:String = current.to_string();
@@ -80,6 +84,19 @@ fn contains(region: String, target: String) -> i32 {
     return value;
 }
 
+fn repeater(equation: String, min: String, max: String, rate: String){
+    let mut i:f64 = min.parse().unwrap();
+    let fmax:f64 = max.parse().unwrap();
+    let frate:f64 = rate.parse().unwrap();
+    let equRaw = equation;
+    let mut equNew:String = "owo".to_string();
+    while !(i > (fmax)) {
+        equNew = replace(i, equRaw.to_string());
+        solve_string(equNew.to_string());
+        i = i + frate;
+    }
+}
+
 fn show_alert_message(clicked: Button) {
     println!("I have awoken?");
     let dialog = clicked.get_dialog().unwrap();
@@ -95,11 +112,11 @@ fn show_alert_message(clicked: Button) {
     let text_box4 = dialog.get_child("rate").unwrap()
         .try_downcast::<TextBox>().ok().expect("child rate was not a TextBox!");
     let rate = text_box4.get_text();
-    graph(equ.to_string(), min.to_string(), max.to_string(), rate.to_string());
+    repeater(equ.to_string(), min.to_string(), max.to_string(), rate.to_string());
 }
 
 fn graph(equation: String, min: String, max: String, rate: String){
-    solve_string(equation);
+
     let mut corda;
     let mut cordb;
     let boxx = [0.0, 0.0, 0.0, 0.0];
@@ -134,6 +151,7 @@ fn graph(equation: String, min: String, max: String, rate: String){
         }
     }
 }
+
 fn solve_string(input :String){
     println!("ran solve string");
     let mut operator_places = vec![];
