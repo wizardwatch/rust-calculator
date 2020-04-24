@@ -13,8 +13,6 @@ use kiss3d::window::Window;
 use na::Point3;
 use std::borrow::Borrow;
 
-
-
 fn main(){
     let x:[f64; 0]= [];
     let y:[f64; 0] = [];
