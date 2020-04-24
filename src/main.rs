@@ -57,11 +57,10 @@ fn main(){
 fn replace(current: u32, equRaw: String) -> String {
     let mut equNew:String = "owo".to_string();
     let equRaw2 = &equRaw;
+    let replacewith:String = current.to_string();
     if contains(equRaw.to_string(), 'x'.to_string())!=-1{
-        let replacewith:String = current.to_string();
         equNew = equRaw.replace('x', &replacewith);
     }else if contains(equRaw2.to_string(), 'X'.to_string())!=-1{
-        replacewith:String = current.to_string();
         equNew = equRaw.replace('X', &replacewith);
     }else{
         equNew = equRaw;
@@ -71,10 +70,10 @@ fn replace(current: u32, equRaw: String) -> String {
 
 fn contains(region: String, target: String) -> i32 {
     let mut value:i32 = -1;
-    for i in region.len() {
+    for i in 0..region.len() {
         let mut current_letter = &region[i..i + 1];
         if current_letter == target {
-            value = i;
+            value = i as i32;
             break;
         }
     }
