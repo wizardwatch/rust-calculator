@@ -107,6 +107,7 @@ fn graph(equation: String, min: String, max: String, rate: String){
     }
 }
 fn solve_string(input :String){
+    println!("ran solve string");
     let mut operator_places = vec![];
     let exponent = "^";
     let multiplication = "*";
@@ -114,20 +115,23 @@ fn solve_string(input :String){
     let addition = "+";
     let subtraction = "#";
     // code here
-    for i in 1..input.len(){
-        let mut current_letter = &input[i..i+1];
-        if current_letter == exponent{
+    for i in 0..input.len() {
+        let mut current_letter = &input[i..i + 1];
+        if current_letter == exponent {
             operator_places.push(exponent);
         }
-        else if current_letter == multiplication{
+    }
+    for i in 0..input.len() {
+        let mut current_letter = &input[i..i + 1];
+        if current_letter == multiplication {
             operator_places.push(multiplication);
-        }
-
-        else if current_letter == division{
+        } else if current_letter == division {
             operator_places.push(division);
         }
-
-        else if current_letter == addition{
+    }
+    for i in 0..input.len() {
+        let mut current_letter = &input[i..i + 1];
+        if current_letter == addition{
             operator_places.push(addition);
         }
 
@@ -136,10 +140,23 @@ fn solve_string(input :String){
         }
     }
     for i in 0..operator_places.len() {
-        let beforeplaces = 0;
-        let afterplaces = 1;
+        println!("ran operator_places");
+        let mut beforeplaces = 0;
+        let mut afterplaces = 1;
         let current_operator = operator_places[i];
-        //let current_operator_pos = (input.index(current_operator));
+        let current_operator_pos = (input.find(current_operator));
+        let str_cop = current_operator_pos.to_string();
+        let int_cop:i32 = str_cop.parse::<i32>().unwrap();
+        println!("hi {:?}", current_operator_pos);
+        let isletter:bool;
+        loop{
+            if isletter == (int_cop - beforeplaces -1 >= 1) && ((input.charAt(int_cop - beforeplaces - 1)).isDigit) || (input.charAt(int_cop - beforeplaces - 1) == '.'){
+                beforeplaces = beforeplaces+1;
+            }
+            else{
+                break;
+            }
+        }
     }
     //return exampleoutput1;
 }
