@@ -90,10 +90,12 @@ fn repeater(equation: String, min: String, max: String, rate: String){
     let frate:f64 = rate.parse().unwrap();
     let equRaw = equation;
     let mut equNew:String = "owo".to_string();
+    let mut result:f64= 0.0 ;
     while !(i > (fmax)) {
         equNew = replace(i, equRaw.to_string());
         x.append(i);
         result = solve_string(equNew.to_string());
+        y.append(result);
         /*
         if(result == imaginary){
             z.append(imaginary portion)
