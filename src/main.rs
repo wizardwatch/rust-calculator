@@ -122,7 +122,7 @@ fn show_alert_message(clicked: Button) {
     let text_box4 = dialog.get_child("rate").unwrap()
         .try_downcast::<TextBox>().ok().expect("child rate was not a TextBox!");
     let rate = text_box4.get_text();
-    repeater(equ.to_string(), min.to_string(), max.to_string(), rate.to_string());
+    graph(equ.to_string(), min.to_string(), max.to_string(), rate.to_string());
 }
 
 fn graph(equation: String, min: String, max: String, rate: String){
