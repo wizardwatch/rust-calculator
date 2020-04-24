@@ -3,7 +3,6 @@ extern crate kiss_ui;
 extern crate kiss3d;
 extern crate nalgebra as na;
 extern crate num;
-
 use kiss_ui::prelude::*;
 use kiss_ui::container::*;
 use kiss_ui::dialog::Dialog;
@@ -163,8 +162,8 @@ fn graph(equation: String, min: String, max: String, rate: String){
         }
     }
 }
-
-fn solve_string(input :String){
+fn solve_string(mut input:String) -> f64 {
+    let mut answer:f64 = 404.0;
     println!("ran solve string");
     let mut operator_places = vec![];
     let exponent = "^";
@@ -259,8 +258,38 @@ fn solve_string(input :String){
             }
         }
         println!("after places{}", afterplaces);
+        let firstnum = &input[(int_cop-beforeplaces) as usize..(int_cop) as usize];
+        let firstnumf64 = firstnum.parse::<f64>().unwrap();
+        let secnum =&input[(int_cop) as usize..(int_cop+afterplaces) as usize];
+        let secnumf64 = firstnum.parse::<f64>().unwrap();
+
+        if current_operator == exponent{
+            answer = firstnumf64.powf(secnumf64);
+        }
+        if current_operator ==  multiplication{
+            answer = firstnumf64 * secnumf64;
+        }
+        if current_operator == division{
+            answer = firstnumf64 / secnumf64;
+        }
+        if current_operator == addition{
+            answer = firstnumf64 + secnumf64;
+        }
+        if current_operator == subtraction{
+            answer = firstnumf64 - secnumf64;
+        }
+        println!("the anser is {}", answer);
+        let coolstring = input;
+        let inputcash1 = &coolstring[0 as usize..int_cop as usize-beforeplaces as usize];
+        let inputcash2 = answer.to_string();
+        let inputcash3 = &coolstring[int_cop as usize+afterplaces as usize .. coolstring.len()-1 as usize];
+        input = ("").parse().unwrap();
+        input.push_str(inputcash1);
+        input.push_str(&inputcash2);
+        input.push_str(inputcash3);
+        println!("{}", input);
     }
-    //return exampleoutput1;
+    return answer;
 }
 fn is_string_numeric(str: String) -> bool {
     for c in str.chars() {
