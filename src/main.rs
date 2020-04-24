@@ -17,7 +17,7 @@ use na::Point3;
 fn main(){
         kiss_ui::show_gui(|| {
             Dialog::new(
-                Vertical::new(
+                Grid::new(
                     children![
                     Label::new("Enter a message:"),
                     TextBox::new()
@@ -37,6 +37,8 @@ fn main(){
                         .set_onclick(show_alert_message),
                 ]
                 )
+                    .set_ndiv(3 as u32)
+
             )
                 .set_title("Hello, world!")
                 .set_size_pixels(640, 480)
@@ -50,6 +52,33 @@ fn main(){
         },
         Err(e) => println!("input failed. Please report to github.")
     }
+}
+
+fn replace(current: u32, equRaw: String) -> String {
+    let mut equNew:String = "owo".to_string();
+    let equRaw2 = &equRaw;
+    if contains(equRaw.to_string(), 'x'.to_string())!=-1{
+        let replacewith:String = current.to_string();
+        equNew = equRaw.replace('x', &replacewith);
+    }else if contains(equRaw2.to_string(), 'X'.to_string())!=-1{
+        replacewith:String = current.to_string();
+        equNew = equRaw.replace('X', &replacewith);
+    }else{
+        equNew = equRaw;
+    }
+    return equNew;
+}
+
+fn contains(region: String, target: String) -> i32 {
+    let mut value:i32 = -1;
+    for i in region.len() {
+        let mut current_letter = &region[i..i + 1];
+        if current_letter == target {
+            value = i;
+            break;
+        }
+    }
+    return value;
 }
 
 fn show_alert_message(clicked: Button) {
