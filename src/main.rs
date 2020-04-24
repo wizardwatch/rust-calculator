@@ -16,9 +16,9 @@ use std::borrow::Borrow;
 
 
 fn main(){
-    let x = [];
-    let y = [];
-    let z = [];
+    let x:[f64; 0]= [];
+    let y:[f64; 0] = [];
+    let z:[f64; 0] = [];
         kiss_ui::show_gui(|| {
             Dialog::new(
                 Grid::new(
@@ -92,10 +92,11 @@ fn repeater(equation: String, min: String, max: String, rate: String){
     let mut result:f64= 0.0 ;
     while !(i > (fmax)) {
         equNew = replace(i, equRaw.to_string());
+        /*
         x.append(i);
         result = solve_string(equNew.to_string());
         y.append(result);
-        /*
+
         if(result == imaginary){
             z.append(imaginary portion)
             y.append(real portion)
@@ -133,9 +134,9 @@ fn graph(equation: String, min: String, max: String, rate: String){
     let boxx = [0.0, 0.0, 0.0, 0.0];
     let boxy = [10.0, 0.0, -10.0,0.0];
     let boxz = [0.0, 10.0, 0.0,-10.0];
-    let examplex = [0.0, 0.0, 0.0, 0.0];
-    let exampley = [10.0, 0.0, -10.0,0.0];
-    let examplez = [0.0, 10.0, 0.0,-10.0];
+    let examplex = [0.0, 1.0, 2.0, 3.0];
+    let exampley = [0.0, 9.0, 18.0,27.0];
+    let examplez = [0.0, 0.0, 0.0,0.0];
     let mut window = Window::new("Kiss3d: lines");
     window.set_light(Light::StickToCamera);
     while window.render() {
