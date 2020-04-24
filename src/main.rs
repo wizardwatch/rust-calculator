@@ -144,19 +144,71 @@ fn solve_string(input :String){
         let mut beforeplaces = 0;
         let mut afterplaces = 1;
         let current_operator = operator_places[i];
-        let current_operator_pos = (input.find(current_operator));
-        let str_cop = current_operator_pos.to_string();
-        let int_cop:i32 = str_cop.parse::<i32>().unwrap();
-        println!("hi {:?}", current_operator_pos);
-        let isletter:bool;
+        let mut int_cop:i32 = 0;
+        for s in 0..input.len(){
+            let mut current_letter = &input[s..s + 1];
+            if current_operator == current_letter{
+                let str_cop = s.to_string();
+                int_cop = str_cop.parse::<i32>().unwrap();
+            }
+        }
+
+        println!("hi {:?}", int_cop);
+
+        let isletter:bool = true;
+        let mut ch_p:usize;
         loop{
-            if isletter == (int_cop - beforeplaces -1 >= 1) && ((input.charAt(int_cop - beforeplaces - 1)).isDigit) || (input.charAt(int_cop - beforeplaces - 1) == '.'){
-                beforeplaces = beforeplaces+1;
+            ch_p = (int_cop - beforeplaces) as usize;
+            if ch_p == 0{
+                break;
+            }
+            println!("ch_p is {}", ch_p);
+            let ch = &input[ch_p-1..ch_p];
+            let chstring = ch.to_string();
+            println!("chstring is{}", chstring);
+            if isletter ==  (is_string_numeric(chstring)){
+                println!("added beforeplace is nubmer");
+                beforeplaces = beforeplaces + 1;
+            }
+            else if isletter ==  (ch.to_string() == "."){
+                println!("added beforeplace is .");
+                beforeplaces = beforeplaces + 1;
             }
             else{
                 break;
             }
         }
+        println!("beforeplaces {}", beforeplaces);
+        loop{
+            ch_p = (int_cop  + afterplaces) as usize;
+            if ch_p == input.len(){
+                break;
+            }
+            println!("ch_p is {}", ch_p);
+            let ch = &input[ch_p-1..ch_p];
+            let chstring = ch.to_string();
+            println!("chstring is{}", chstring);
+            if isletter == (is_string_numeric(chstring)){
+                println!("added beforeplace is nubmer");
+                afterplaces = afterplaces + 1;
+            }
+            else if isletter == (ch.to_string() == "."){
+                println!("added beforeplace is .");
+                afterplaces = afterplaces + 1;
+            }
+            else{
+                break;
+            }
+        }
+        println!("after places{}", afterplaces);
     }
     //return exampleoutput1;
+}
+fn is_string_numeric(str: String) -> bool {
+    for c in str.chars() {
+        if !c.is_numeric() {
+            return false;
+        }
+    }
+    return true;
 }
