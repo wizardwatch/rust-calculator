@@ -3,6 +3,7 @@ extern crate kiss_ui;
 extern crate kiss3d;
 extern crate nalgebra as na;
 extern crate num;
+extern crate once_cell;
 use kiss_ui::prelude::*;
 use kiss_ui::container::*;
 use kiss_ui::dialog::Dialog;
@@ -12,11 +13,14 @@ use kiss3d::light::Light;
 use kiss3d::window::Window;
 use na::Point3;
 use std::borrow::Borrow;
+use std::sync::Mutex;
+use once_cell::sync::Lazy;
+
+static x: Lazy<Mutex<Vec<f32>>> = Lazy::new(|| Mutex::new(vec![]));
+static y: Lazy<Mutex<Vec<f32>>> = Lazy::new(|| Mutex::new(vec![]));
+static z: Lazy<Mutex<Vec<f32>>> = Lazy::new(|| Mutex::new(vec![]));
 
 fn main(){
-    let x:[f64; 0]= [];
-    let y:[f64; 0] = [];
-    let z:[f64; 0] = [];
         kiss_ui::show_gui(|| {
             Dialog::new(
                 Grid::new(
@@ -55,7 +59,7 @@ fn main(){
         Err(e) => println!("input faiwed owO. Pwease repowt to github uwu.")
     }
 }
-fn replace(current: f64, equRaw: String) -> String {
+fn replace(current: f32, equRaw: String) -> String {
     let mut equNew:String = "owo".to_string();
     let equRaw2 = &equRaw;
     let replacewith:String = current.to_string();
@@ -82,19 +86,21 @@ fn contains(region: String, target: String) -> i32 {
 }
 
 fn repeater(equation: String, min: String, max: String, rate: String){
-    let mut i:f64 = min.parse().unwrap();
-    let fmax:f64 = max.parse().unwrap();
-    let frate:f64 = rate.parse().unwrap();
+    let mut i:f32 = min.parse().unwrap();
+    let fmax:f32 = max.parse().unwrap();
+    let frate:f32 = rate.parse().unwrap();
     let equRaw = equation;
     let mut equNew:String = "owo".to_string();
-    let mut result:f64= 0.0 ;
+    let mut result:f32= 0.0 ;
     while !(i > (fmax)) {
         equNew = replace(i, equRaw.to_string());
+        unsafe {
+            x.lock().unwrap().push(i);
+            result = solve_string(equNew.to_string()) as f32;
+            y.lock().unwrap().push(result);
+            z.lock().unwrap().push(0.0);
+        }
         /*
-        x.append(i);
-        result = solve_string(equNew.to_string());
-        y.append(result);
-
         if(result == imaginary){
             z.append(imaginary portion)
             y.append(real portion)
@@ -129,40 +135,42 @@ fn graph(equation: String, min: String, max: String, rate: String){
 
     let mut corda;
     let mut cordb;
-    let boxx = [0.0, 0.0, 0.0, 0.0];
-    let boxy = [10.0, 0.0, -10.0,0.0];
-    let boxz = [0.0, 10.0, 0.0,-10.0];
-    let examplex = [0.0, 1.0, 2.0, 3.0];
-    let exampley = [0.0, 9.0, 18.0,27.0];
-    let examplez = [0.0, 0.0, 0.0,0.0];
+    //let boxx = [0.0, 0.0, 0.0, 0.0];
+    //let boxy = [10.0, 0.0, -10.0,0.0];
+    //let boxz = [0.0, 10.0, 0.0,-10.0];
+    let examplex = [0.0, 1.0, 2.0, 3.0,4.0,5.0,6.0,7.0,8.0,9.0,10.0];
+    let exampley = [0.0, 2.0, 4.0,6.0,8.0,10.0,12.0,14.0,16.0,18.0,20.0];
+    let examplez = [0.0, 0.0, 0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0];
     let mut window = Window::new("Kiss3d: lines");
     window.set_light(Light::StickToCamera);
     while window.render() {
         //makes reference
-        for i in  1..boxx.len(){
-            let bx = boxx[i];
-            let by = boxy[i];
-            let bz = boxz[i];
-            corda = Point3::new(0.0, 0.0, 0.0);
-            cordb = Point3::new(bx, by, bz);
-            window.draw_line(&corda, &cordb, &Point3::new(1.0, 0.0, 0.0));
-        }
+        //for i in  1..boxx.len(){
+            //let bx = boxx[i];
+            //let by = boxy[i];
+            //let bz = boxz[i];
+            //corda = Point3::new(0.0, 0.0, 0.0);
+            //cordb = Point3::new(bx, by, bz);
+            //window.draw_line(&corda, &cordb, &Point3::new(1.0, 0.0, 0.0));
+        //}
         //makes graph
         for i in  1..examplex.len(){
-            let ax = examplex[i-1];
-            let ay = exampley[i-1];
-            let az = examplez[i-1];
-            let bx = examplex[i];
-            let by = exampley[i];
-            let bz = examplez[i];
-            corda = Point3::new(ax, ay, az);
-            cordb = Point3::new(bx, by, bz);
-            window.draw_line(&corda, &cordb, &Point3::new(1.0, 0.0, 0.0));
+            unsafe {
+                let ax = x.lock().unwrap()[i - 1];
+                let ay = y.lock().unwrap()[i - 1];
+                let az = z.lock().unwrap()[i - 1];
+                let bx = x.lock().unwrap()[i];
+                let by = y.lock().unwrap()[i];
+                let bz = z.lock().unwrap()[i];
+                corda = Point3::new(ax, ay, az);
+                cordb = Point3::new(bx, by, bz);
+                window.draw_line(&corda, &cordb, &Point3::new(1.0, 0.0, 0.0));
+            }
         }
     }
 }
-fn solve_string(mut input:String) -> f64 {
-    let mut answer:f64 = 404.0;
+fn solve_string(mut input:String) -> f32 {
+    let mut answer:f32 = 404.0;
     println!("ran solve string");
     let mut operator_places = vec![];
     let exponent = "^";
@@ -258,9 +266,9 @@ fn solve_string(mut input:String) -> f64 {
         }
         println!("after places{}", afterplaces);
         let firstnum = &input[(int_cop-beforeplaces) as usize..(int_cop) as usize];
-        let firstnumf64 = firstnum.parse::<f64>().unwrap();
+        let firstnumf64:f32 = firstnum.parse::<f32>().unwrap();
         let secnum =&input[(int_cop) as usize..(int_cop+afterplaces) as usize];
-        let secnumf64 = firstnum.parse::<f64>().unwrap();
+        let secnumf64:f32 = firstnum.parse::<f32>().unwrap();
 
         if current_operator == exponent{
             answer = firstnumf64.powf(secnumf64);
