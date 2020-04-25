@@ -243,6 +243,9 @@ fn solve_string(mut input:String) -> f32 {
             else if true ==  (ch.to_string() == "."){
                 beforeplaces = beforeplaces + 1;
             }
+            else if true ==  (ch.to_string() == "-"){
+                beforeplaces = beforeplaces + 1;
+            }
             else{
                 break;
             }
@@ -261,6 +264,9 @@ fn solve_string(mut input:String) -> f32 {
                 afterplaces = afterplaces + 1;
             }
             else if true == (ch.to_string() == "."){
+                afterplaces = afterplaces + 1;
+            }
+            else if true == (ch.to_string() == "-"){
                 afterplaces = afterplaces + 1;
             }
             else{
