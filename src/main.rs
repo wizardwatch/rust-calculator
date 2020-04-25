@@ -3,7 +3,7 @@ extern crate kiss_ui;
 extern crate kiss3d;
 extern crate nalgebra as na;
 extern crate num;
-extern crate once_cell;
+
 use kiss_ui::prelude::*;
 use kiss_ui::container::*;
 use kiss_ui::dialog::Dialog;
@@ -14,11 +14,7 @@ use kiss3d::window::Window;
 use na::Point3;
 use std::borrow::Borrow;
 use std::sync::Mutex;
-use once_cell::sync::Lazy;
 
-static x: Lazy<Mutex<Vec<f32>>> = Lazy::new(|| Mutex::new(vec![]));
-static y: Lazy<Mutex<Vec<f32>>> = Lazy::new(|| Mutex::new(vec![]));
-static z: Lazy<Mutex<Vec<f32>>> = Lazy::new(|| Mutex::new(vec![]));
 
 fn main(){
         kiss_ui::show_gui(|| {
@@ -85,7 +81,7 @@ fn contains(region: String, target: String) -> i32 {
     return value;
 }
 
-fn repeater(equation: String, min: String, max: String, rate: String){
+fn repeater(equation: String, min: String, max: String, rate: String, mut x: &mut Vec<f32>, mut y: &mut Vec<f32>, mut z: &mut Vec<f32>){
     let mut i:f32 = min.parse().unwrap();
     let fmax:f32 = max.parse().unwrap();
     let frate:f32 = rate.parse().unwrap();
@@ -94,12 +90,10 @@ fn repeater(equation: String, min: String, max: String, rate: String){
     let mut result:f32= 0.0 ;
     while !(i > (fmax)) {
         equNew = replace(i, equRaw.to_string());
-        unsafe {
-            x.lock().unwrap().push(i);
+            x.push(i);
             result = solve_string(equNew.to_string()) as f32;
-            y.lock().unwrap().push(result);
-            z.lock().unwrap().push(0.0);
-        }
+            y.push(result);
+            z.push(0.0);
         /*
         if(result == imaginary){
             z.append(imaginary portion)
@@ -114,7 +108,9 @@ fn repeater(equation: String, min: String, max: String, rate: String){
 }
 
 fn show_alert_message(clicked: Button) {
-    println!("I have awoken?");
+    let mut x:Vec<f32> = vec![];
+    let mut y:Vec<f32> = vec![];
+    let mut z:Vec<f32> = vec![];
     let dialog = clicked.get_dialog().unwrap();
     let text_box1 = dialog.get_child("equ_raw").unwrap()
         .try_downcast::<TextBox>().ok().expect("child equ_raw was not a TextBox!");
@@ -128,16 +124,33 @@ fn show_alert_message(clicked: Button) {
     let text_box4 = dialog.get_child("rate").unwrap()
         .try_downcast::<TextBox>().ok().expect("child rate was not a TextBox!");
     let rate = text_box4.get_text();
-    graph(equ.to_string(), min.to_string(), max.to_string(), rate.to_string());
+    passthrough(equ.to_string(), min.to_string(), max.to_string(), rate.to_string(), x, y, z);
 }
 
-fn graph(equation: String, min: String, max: String, rate: String){
+fn passthrough(equation: String, min: String, max: String, rate: String, mut x1: Vec<f32>, mut y1: Vec<f32>, mut z1: Vec<f32>){
+    /*
+    let equ2 = &equation;
+    let min2 = &min;
+    let max2 = &max;
+    let rate2 = &rate;
+    */
+    let x2 = &mut x1;
+    let y2 = &mut y1;
+    let z2 = &mut z1;
+    repeater(equation, min, max, rate, x2, y2, z2);
+    println!("Finished repeater with:\nx1:{}\ny1:{}\nz1:{}" ,x1[0],y1[0],z1[0]);
+    graph(&x1, &y1, &z1);
+    println!("Finished Graph")
+}
 
+
+fn graph(x1:&Vec<f32>, y1:&Vec<f32>, z1:&Vec<f32>){
+    println!("Started Graph with:\nx1:{}\ny1:{}\nz1:{}" ,x1[0],y1[0],z1[0]);
     let mut corda;
     let mut cordb;
-    //let boxx = [0.0, 0.0, 0.0, 0.0];
-    //let boxy = [10.0, 0.0, -10.0,0.0];
-    //let boxz = [0.0, 10.0, 0.0,-10.0];
+    let boxx = [0.0, 0.0, 0.0, 0.0];
+    let boxy = [10.0, 0.0, -10.0,0.0];
+    let boxz = [0.0, 10.0, 0.0,-10.0];
     let examplex = [0.0, 1.0, 2.0, 3.0,4.0,5.0,6.0,7.0,8.0,9.0,10.0];
     let exampley = [0.0, 2.0, 4.0,6.0,8.0,10.0,12.0,14.0,16.0,18.0,20.0];
     let examplez = [0.0, 0.0, 0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0];
@@ -145,27 +158,25 @@ fn graph(equation: String, min: String, max: String, rate: String){
     window.set_light(Light::StickToCamera);
     while window.render() {
         //makes reference
-        //for i in  1..boxx.len(){
-            //let bx = boxx[i];
-            //let by = boxy[i];
-            //let bz = boxz[i];
-            //corda = Point3::new(0.0, 0.0, 0.0);
-            //cordb = Point3::new(bx, by, bz);
-            //window.draw_line(&corda, &cordb, &Point3::new(1.0, 0.0, 0.0));
-        //}
+        for i in  1..boxx.len(){
+            let bx = boxx[i];
+            let by = boxy[i];
+            let bz = boxz[i];
+            corda = Point3::new(0.0, 0.0, 0.0);
+            cordb = Point3::new(bx, by, bz);
+            window.draw_line(&corda, &cordb, &Point3::new(1.0, 0.0, 0.0));
+        }
         //makes graph
         for i in  1..examplex.len(){
-            unsafe {
-                let ax = x.lock().unwrap()[i - 1];
-                let ay = y.lock().unwrap()[i - 1];
-                let az = z.lock().unwrap()[i - 1];
-                let bx = x.lock().unwrap()[i];
-                let by = y.lock().unwrap()[i];
-                let bz = z.lock().unwrap()[i];
-                corda = Point3::new(ax, ay, az);
-                cordb = Point3::new(bx, by, bz);
-                window.draw_line(&corda, &cordb, &Point3::new(1.0, 0.0, 0.0));
-            }
+            let ax = x1[i - 1];
+            let ay = y1[i - 1];
+            let az = z1[i - 1];
+            let bx = x1[i];
+            let by = y1[i];
+            let bz = z1[i];
+            corda = Point3::new(ax, ay, az);
+            cordb = Point3::new(bx, by, bz);
+            window.draw_line(&corda, &cordb, &Point3::new(1.0, 0.0, 0.0));
         }
     }
 }
@@ -217,7 +228,6 @@ fn solve_string(mut input:String) -> f32 {
             }
         }
 
-        println!("hi {:?}", int_cop);
 
         let isletter:bool = true;
         let mut ch_p:usize;
@@ -226,45 +236,35 @@ fn solve_string(mut input:String) -> f32 {
             if ch_p == 0{
                 break;
             }
-            println!("ch_p is {}", ch_p);
             let ch = &input[ch_p-1..ch_p];
             let chstring = ch.to_string();
-            println!("chstring is{}", chstring);
             if isletter ==  (is_string_numeric(chstring)){
-                println!("added beforeplace is nubmer");
                 beforeplaces = beforeplaces + 1;
             }
             else if isletter ==  (ch.to_string() == "."){
-                println!("added beforeplace is .");
                 beforeplaces = beforeplaces + 1;
             }
             else{
                 break;
             }
         }
-        println!("beforeplaces {}", beforeplaces);
         loop{
             ch_p = (int_cop  + afterplaces) as usize;
             if ch_p == input.len(){
                 break;
             }
-            println!("ch_p is {}", ch_p);
             let ch = &input[ch_p-1..ch_p];
             let chstring = ch.to_string();
-            println!("chstring is{}", chstring);
             if isletter == (is_string_numeric(chstring)){
-                println!("added beforeplace is nubmer");
                 afterplaces = afterplaces + 1;
             }
             else if isletter == (ch.to_string() == "."){
-                println!("added beforeplace is .");
                 afterplaces = afterplaces + 1;
             }
             else{
                 break;
             }
         }
-        println!("after places{}", afterplaces);
         let firstnum = &input[(int_cop-beforeplaces) as usize..(int_cop) as usize];
         let firstnumf64:f32 = firstnum.parse::<f32>().unwrap();
         let secnum =&input[(int_cop) as usize..(int_cop+afterplaces) as usize];
@@ -294,7 +294,6 @@ fn solve_string(mut input:String) -> f32 {
         input.push_str(inputcash1);
         input.push_str(&inputcash2);
         input.push_str(inputcash3);
-        println!("{}", input);
     }
     return answer;
 }
