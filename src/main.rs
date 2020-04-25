@@ -12,9 +12,6 @@ use kiss_ui::button::*;
 use kiss3d::light::Light;
 use kiss3d::window::Window;
 use na::Point3;
-use std::borrow::Borrow;
-use std::sync::Mutex;
-
 
 fn main(){
         kiss_ui::show_gui(|| {
@@ -72,8 +69,8 @@ fn replace(current: f32, equRaw: String) -> String {
 fn contains(region: String, target: String) -> i32 {
     let mut value:i32 = -1;
     for i in 0..region.len() {
-        let mut current_letter = &region[i..i + 1];
-        if current_letter == target {
+        let current_let = &region[i..i + 1];
+        if current_let == target {
             value = i as i32;
             break;
         }
@@ -81,19 +78,22 @@ fn contains(region: String, target: String) -> i32 {
     return value;
 }
 
-fn repeater(equation: String, min: String, max: String, rate: String, mut x: &mut Vec<f32>, mut y: &mut Vec<f32>, mut z: &mut Vec<f32>){
+fn repeater(equation: String, min: String, max: String, rate: String, x: &mut Vec<f32>, y: &mut Vec<f32>, z: &mut Vec<f32>){
     let mut i:f32 = min.parse().unwrap();
     let fmax:f32 = max.parse().unwrap();
     let frate:f32 = rate.parse().unwrap();
     let equRaw = equation;
     let mut equNew:String = "owo".to_string();
-    let mut result:f32= 0.0 ;
+    let mut result:f32= 0.0;
     while !(i > (fmax)) {
         equNew = replace(i, equRaw.to_string());
-            x.push(i);
-            result = solve_string(equNew.to_string()) as f32;
-            y.push(result);
-            z.push(0.0);
+        x.push(i);
+        println!("Solving {}",equNew);
+        println!("{}",solve_string((equNew).to_string()).to_string());
+        result = solve_string((equNew).to_string()) as f32;
+        y.push(result);
+        z.push(0.0);
+        println!("{} gives us {} when put into {}",x[(i/frate) as usize],y[(i/frate) as usize],equRaw);
         /*
         if(result == imaginary){
             z.append(imaginary portion)
@@ -108,9 +108,9 @@ fn repeater(equation: String, min: String, max: String, rate: String, mut x: &mu
 }
 
 fn show_alert_message(clicked: Button) {
-    let mut x:Vec<f32> = vec![];
-    let mut y:Vec<f32> = vec![];
-    let mut z:Vec<f32> = vec![];
+    let x:Vec<f32> = vec![];
+    let y:Vec<f32> = vec![];
+    let z:Vec<f32> = vec![];
     let dialog = clicked.get_dialog().unwrap();
     let text_box1 = dialog.get_child("equ_raw").unwrap()
         .try_downcast::<TextBox>().ok().expect("child equ_raw was not a TextBox!");
@@ -151,23 +151,20 @@ fn graph(x1:&Vec<f32>, y1:&Vec<f32>, z1:&Vec<f32>){
     let boxx = [0.0, 0.0, 0.0, 0.0];
     let boxy = [10.0, 0.0, -10.0,0.0];
     let boxz = [0.0, 10.0, 0.0,-10.0];
-    let examplex = [0.0, 1.0, 2.0, 3.0,4.0,5.0,6.0,7.0,8.0,9.0,10.0];
-    let exampley = [0.0, 2.0, 4.0,6.0,8.0,10.0,12.0,14.0,16.0,18.0,20.0];
-    let examplez = [0.0, 0.0, 0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0];
     let mut window = Window::new("Kiss3d: lines");
     window.set_light(Light::StickToCamera);
     while window.render() {
         //makes reference
         for i in  1..boxx.len(){
-            let bx = boxx[i];
-            let by = boxy[i];
-            let bz = boxz[i];
+            let cx = boxx[i];
+            let cy = boxy[i];
+            let cz = boxz[i];
             corda = Point3::new(0.0, 0.0, 0.0);
-            cordb = Point3::new(bx, by, bz);
+            cordb = Point3::new(cx, cy, cz);
             window.draw_line(&corda, &cordb, &Point3::new(1.0, 0.0, 0.0));
         }
         //makes graph
-        for i in  1..examplex.len(){
+        for i in  1..x1.len(){
             let ax = x1[i - 1];
             let ay = y1[i - 1];
             let az = z1[i - 1];
@@ -189,15 +186,16 @@ fn solve_string(mut input:String) -> f32 {
     let division = "/";
     let addition = "+";
     let subtraction = "#";
+    let mut current_letter;
     // code here
     for i in 0..input.len() {
-        let mut current_letter = &input[i..i + 1];
+        current_letter = &input[i..i + 1];
         if current_letter == exponent {
             operator_places.push(exponent);
         }
     }
     for i in 0..input.len() {
-        let mut current_letter = &input[i..i + 1];
+        current_letter = &input[i..i + 1];
         if current_letter == multiplication {
             operator_places.push(multiplication);
         } else if current_letter == division {
@@ -205,7 +203,7 @@ fn solve_string(mut input:String) -> f32 {
         }
     }
     for i in 0..input.len() {
-        let mut current_letter = &input[i..i + 1];
+        current_letter = &input[i..i + 1];
         if current_letter == addition{
             operator_places.push(addition);
         }
@@ -221,10 +219,11 @@ fn solve_string(mut input:String) -> f32 {
         let current_operator = operator_places[i];
         let mut int_cop:i32 = 0;
         for s in 0..input.len(){
-            let mut current_letter = &input[s..s + 1];
+            current_letter = &input[s..s + 1];
             if current_operator == current_letter{
                 let str_cop = s.to_string();
                 int_cop = str_cop.parse::<i32>().unwrap();
+                println!("1: int_cop is {}",int_cop)
             }
         }
 
@@ -238,10 +237,10 @@ fn solve_string(mut input:String) -> f32 {
             }
             let ch = &input[ch_p-1..ch_p];
             let chstring = ch.to_string();
-            if isletter ==  (is_string_numeric(chstring)){
+            if true ==  (is_string_numeric(chstring)){
                 beforeplaces = beforeplaces + 1;
             }
-            else if isletter ==  (ch.to_string() == "."){
+            else if true ==  (ch.to_string() == "."){
                 beforeplaces = beforeplaces + 1;
             }
             else{
@@ -249,16 +248,19 @@ fn solve_string(mut input:String) -> f32 {
             }
         }
         loop{
-            ch_p = (int_cop  + afterplaces) as usize;
+            ch_p = (int_cop  + afterplaces + 1) as usize;
             if ch_p == input.len(){
                 break;
             }
             let ch = &input[ch_p-1..ch_p];
             let chstring = ch.to_string();
-            if isletter == (is_string_numeric(chstring)){
+            println!("ch_p is {}", ch_p);
+            println!("ch is {}",ch);
+            println!("chstring is {}",chstring);
+            if true == (is_string_numeric(chstring)){
                 afterplaces = afterplaces + 1;
             }
-            else if isletter == (ch.to_string() == "."){
+            else if true == (ch.to_string() == "."){
                 afterplaces = afterplaces + 1;
             }
             else{
@@ -267,9 +269,12 @@ fn solve_string(mut input:String) -> f32 {
         }
         let firstnum = &input[(int_cop-beforeplaces) as usize..(int_cop) as usize];
         let firstnumf64:f32 = firstnum.parse::<f32>().unwrap();
-        let secnum =&input[(int_cop) as usize..(int_cop+afterplaces) as usize];
-        let secnumf64:f32 = firstnum.parse::<f32>().unwrap();
-
+        println!("2: int_cop is {}",int_cop);
+        println!("afterplaces is {}",afterplaces);
+        let mut secnum;
+        secnum =&input[(int_cop+1) as usize..(int_cop+afterplaces+1) as usize];
+        println!("secnum is {}",secnum);
+        let secnumf64:f32 = secnum.parse::<f32>().unwrap();
         if current_operator == exponent{
             answer = firstnumf64.powf(secnumf64);
         }
@@ -285,7 +290,7 @@ fn solve_string(mut input:String) -> f32 {
         if current_operator == subtraction{
             answer = firstnumf64 - secnumf64;
         }
-        println!("the anser is {}", answer);
+        println!("the answer is {}", answer);
         let coolstring = input;
         let inputcash1 = &coolstring[0 as usize..int_cop as usize-beforeplaces as usize];
         let inputcash2 = answer.to_string();
@@ -298,10 +303,15 @@ fn solve_string(mut input:String) -> f32 {
     return answer;
 }
 fn is_string_numeric(str: String) -> bool {
+    let mut numeric = 0;
     for c in str.chars() {
         if !c.is_numeric() {
-            return false;
+            numeric = 1;
         }
     }
-    return true;
+    if numeric == 1{
+        return false;
+    }else{
+        return true;
+    }
 }
