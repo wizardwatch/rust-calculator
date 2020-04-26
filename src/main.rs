@@ -44,7 +44,6 @@ fn main(){
         });
     use std::io;
     let mut input = String::new();
-    println!("input equation");
     match io::stdin().read_line(&mut input){
         Ok(_) => {
             println!("input received")
@@ -88,12 +87,11 @@ fn repeater(equation: String, min: String, max: String, rate: String, x: &mut Ve
     while !(i > (fmax)) {
         equNew = replace(i, equRaw.to_string());
         x.push(i);
-        println!("Solving {}",equNew);
-        println!("{}",solve_string((equNew).to_string()).to_string());
+        println!("1: Solving {}",equNew);
         result = solve_string((equNew).to_string()) as f32;
         y.push(result);
         z.push(0.0);
-        println!("{} gives us {} when put into {}",x[(i/frate) as usize],y[(i/frate) as usize],equRaw);
+        println!("4: {} gives us {} when put into {}",x[(i/frate) as usize],y[(i/frate) as usize],equRaw);
         /*
         if(result == imaginary){
             z.append(imaginary portion)
@@ -138,14 +136,12 @@ fn passthrough(equation: String, min: String, max: String, rate: String, mut x1:
     let y2 = &mut y1;
     let z2 = &mut z1;
     repeater(equation, min, max, rate, x2, y2, z2);
-    println!("Finished repeater with:\nx1:{}\ny1:{}\nz1:{}" ,x1[0],y1[0],z1[0]);
     graph(&x1, &y1, &z1);
-    println!("Finished Graph")
+    println!("5: Finished Graph")
 }
 
 
 fn graph(x1:&Vec<f32>, y1:&Vec<f32>, z1:&Vec<f32>){
-    println!("Started Graph with:\nx1:{}\ny1:{}\nz1:{}" ,x1[0],y1[0],z1[0]);
     let mut corda;
     let mut cordb;
     let boxx = [0.0, 0.0, 0.0, 0.0];
@@ -179,7 +175,6 @@ fn graph(x1:&Vec<f32>, y1:&Vec<f32>, z1:&Vec<f32>){
 }
 fn solve_string(mut input:String) -> f32 {
     let mut answer:f32 = 404.0;
-    println!("ran solve string");
     let mut operator_places = vec![];
     let exponent = "^";
     let multiplication = "*";
@@ -213,7 +208,6 @@ fn solve_string(mut input:String) -> f32 {
         }
     }
     for i in 0..operator_places.len() {
-        println!("ran operator_places");
         let mut beforeplaces = 0;
         let mut afterplaces = 1;
         let current_operator = operator_places[i];
@@ -223,7 +217,6 @@ fn solve_string(mut input:String) -> f32 {
             if current_operator == current_letter{
                 let str_cop = s.to_string();
                 int_cop = str_cop.parse::<i32>().unwrap();
-                println!("1: int_cop is {}",int_cop)
             }
         }
 
@@ -257,9 +250,6 @@ fn solve_string(mut input:String) -> f32 {
             }
             let ch = &input[ch_p-1..ch_p];
             let chstring = ch.to_string();
-            println!("ch_p is {}", ch_p);
-            println!("ch is {}",ch);
-            println!("chstring is {}",chstring);
             if true == (is_string_numeric(chstring)){
                 afterplaces = afterplaces + 1;
             }
@@ -275,11 +265,10 @@ fn solve_string(mut input:String) -> f32 {
         }
         let firstnum = &input[(int_cop-beforeplaces) as usize..(int_cop) as usize];
         let firstnumf64:f32 = firstnum.parse::<f32>().unwrap();
-        println!("2: int_cop is {}",int_cop);
-        println!("afterplaces is {}",afterplaces);
+        println!("3: firstnum is {}",firstnum);
         let mut secnum;
         secnum =&input[(int_cop+1) as usize..(int_cop+afterplaces+1) as usize];
-        println!("secnum is {}",secnum);
+        println!("4: secnum is {}",secnum);
         let secnumf64:f32 = secnum.parse::<f32>().unwrap();
         if current_operator == exponent{
             answer = firstnumf64.powf(secnumf64);
@@ -296,7 +285,6 @@ fn solve_string(mut input:String) -> f32 {
         if current_operator == subtraction{
             answer = firstnumf64 - secnumf64;
         }
-        println!("the answer is {}", answer);
         let coolstring = input;
         let inputcash1 = &coolstring[0 as usize..int_cop as usize-beforeplaces as usize];
         let inputcash2 = answer.to_string();
