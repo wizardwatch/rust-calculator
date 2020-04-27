@@ -180,7 +180,7 @@ fn solve_string(mut input:String) -> f32 {
     let multiplication = "*";
     let division = "/";
     let addition = "+";
-    let subtraction = "#";
+    let subtraction = "~";
     let mut current_letter;
     // code here
     for i in 0..input.len() {
@@ -209,7 +209,7 @@ fn solve_string(mut input:String) -> f32 {
     }
     for i in 0..operator_places.len() {
         let mut beforeplaces = 0;
-        let mut afterplaces = 1;
+        let mut afterplaces = 0;
         let current_operator = operator_places[i];
         let mut int_cop:i32 = 0;
         for s in 0..input.len(){
@@ -224,6 +224,7 @@ fn solve_string(mut input:String) -> f32 {
         let isletter:bool = true;
         let mut ch_p:usize;
         loop{
+            println!(" This  is the input as of line 234 {}", input);
             ch_p = (int_cop - beforeplaces) as usize;
             if ch_p == 0{
                 break;
@@ -248,7 +249,7 @@ fn solve_string(mut input:String) -> f32 {
             if ch_p == input.len(){
                 break;
             }
-            let ch = &input[ch_p-1..ch_p];
+            let ch = &input[ch_p..ch_p+1];
             let chstring = ch.to_string();
             if true == (is_string_numeric(chstring)){
                 afterplaces = afterplaces + 1;
@@ -262,6 +263,7 @@ fn solve_string(mut input:String) -> f32 {
             else{
                 break;
             }
+            println!("Afterplaces iterated");
         }
         let firstnum = &input[(int_cop-beforeplaces) as usize..(int_cop) as usize];
         let firstnumf32:f32 = firstnum.parse::<f32>().unwrap();
@@ -285,11 +287,13 @@ fn solve_string(mut input:String) -> f32 {
         if current_operator == subtraction{
             answer = firstnumf32 - secnumf32;
         }
-        let coolstring = input;
+        let mut coolstring = input;
         println!("4: beforeplaces is {}\n5: afterplaces is {}",beforeplaces,afterplaces);
         let inputcash1 = &coolstring[0 as usize..int_cop as usize-beforeplaces as usize];
         let inputcash2 = answer.to_string();
-        let inputcash3 = &coolstring[int_cop as usize+afterplaces as usize .. coolstring.len()-1 as usize];
+        let inputcash3 = &coolstring[int_cop as usize+afterplaces as usize .. coolstring.len() as usize];
+        let nice = coolstring.len()-1 as usize;
+        println!("On line 295, inputcash3 is {} int_cop is {} and afterplaces is {} and coolstring.len()-1 is {} and coolstring is {}", inputcash3, int_cop, afterplaces, nice, coolstring);
         input = ("").parse().unwrap();
         input.push_str(inputcash1);
         input.push_str(&inputcash2);
