@@ -91,7 +91,7 @@ fn repeater(equation: String, min: String, max: String, rate: String, x: &mut Ve
         result = solve_string((equNew).to_string()) as f32;
         y.push(result);
         z.push(0.0);
-        println!("4: {} gives us {} when put into {}",x[(i/frate) as usize],y[(i/frate) as usize],equRaw);
+        println!("6: {} gives us {} when put into {}",x[(i/frate) as usize],y[(i/frate) as usize],equRaw);
         /*
         if(result == imaginary){
             z.append(imaginary portion)
@@ -137,7 +137,7 @@ fn passthrough(equation: String, min: String, max: String, rate: String, mut x1:
     let z2 = &mut z1;
     repeater(equation, min, max, rate, x2, y2, z2);
     graph(&x1, &y1, &z1);
-    println!("5: Finished Graph")
+    println!("7: Finished Graph")
 }
 
 
@@ -264,28 +264,29 @@ fn solve_string(mut input:String) -> f32 {
             }
         }
         let firstnum = &input[(int_cop-beforeplaces) as usize..(int_cop) as usize];
-        let firstnumf64:f32 = firstnum.parse::<f32>().unwrap();
-        println!("3: firstnum is {}",firstnum);
+        let firstnumf32:f32 = firstnum.parse::<f32>().unwrap();
+        println!("2: firstnum is {}",firstnum);
         let mut secnum;
         secnum =&input[(int_cop+1) as usize..(int_cop+afterplaces+1) as usize];
-        println!("4: secnum is {}",secnum);
-        let secnumf64:f32 = secnum.parse::<f32>().unwrap();
+        println!("3: secnum is {}",secnum);
+        let secnumf32:f32 = secnum.parse::<f32>().unwrap();
         if current_operator == exponent{
-            answer = firstnumf64.powf(secnumf64);
+            answer = firstnumf32.powf(secnumf32);
         }
         if current_operator ==  multiplication{
-            answer = firstnumf64 * secnumf64;
+            answer = firstnumf32 * secnumf32;
         }
         if current_operator == division{
-            answer = firstnumf64 / secnumf64;
+            answer = firstnumf32 / secnumf32;
         }
         if current_operator == addition{
-            answer = firstnumf64 + secnumf64;
+            answer = firstnumf32 + secnumf32;
         }
         if current_operator == subtraction{
-            answer = firstnumf64 - secnumf64;
+            answer = firstnumf32 - secnumf32;
         }
         let coolstring = input;
+        println!("4: beforeplaces is {}\n5: afterplaces is {}",beforeplaces,afterplaces);
         let inputcash1 = &coolstring[0 as usize..int_cop as usize-beforeplaces as usize];
         let inputcash2 = answer.to_string();
         let inputcash3 = &coolstring[int_cop as usize+afterplaces as usize .. coolstring.len()-1 as usize];
