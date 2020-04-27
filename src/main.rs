@@ -193,6 +193,9 @@ fn solve_string(mut input:String) -> f32 {
     let addition = "+";
     let subtraction = "~";
     let mut current_letter;
+    let mut num_of_parth = 0;
+    let mut most_inner_parth = 0;
+    let mut places_after_most_inner = 0;
     // code here
     for i in 0..input.len() {
         current_letter = &input[i..i + 1];
@@ -200,6 +203,7 @@ fn solve_string(mut input:String) -> f32 {
             operator_places.push(exponent);
         }
     }
+
     for i in 0..input.len() {
         current_letter = &input[i..i + 1];
         if current_letter == multiplication {
@@ -218,97 +222,123 @@ fn solve_string(mut input:String) -> f32 {
             operator_places.push(subtraction);
         }
     }
+
     for i in 0..operator_places.len() {
-        let mut beforeplaces = 0;
-        let mut afterplaces = 0;
-        let current_operator = operator_places[i];
-        let mut int_cop:i32 = 0;
-        for s in 0..input.len(){
-            current_letter = &input[s..s + 1];
-            if current_operator == current_letter{
-                let str_cop = s.to_string();
-                int_cop = str_cop.parse::<i32>().unwrap();
-            }
+        current_letter = &input[i..i + 1];
+        if current_letter == "("{
+            num_of_parth = num_of_parth +1
         }
-
-
-        let isletter:bool = true;
-        let mut ch_p:usize;
-        loop{
-            println!(" This  is the input as of line 234 {}", input);
-            ch_p = (int_cop - beforeplaces) as usize;
-            if ch_p == 0{
+    }
+    while num_of_parth > 0 {
+        println!("I repeated num_of_parth");
+        for i in 0..operator_places.len() {
+            current_letter = &input[i..i + 1];
+            if current_letter == "("{
+                most_inner_parth = most_inner_parth +1
+            }
+            else if current_letter == ")"{
                 break;
             }
-            let ch = &input[ch_p-1..ch_p];
-            let chstring = ch.to_string();
-            if true ==  (is_string_numeric(chstring)){
-                beforeplaces = beforeplaces + 1;
-            }
-            else if true ==  (ch.to_string() == "."){
-                beforeplaces = beforeplaces + 1;
-            }
-            else if true ==  (ch.to_string() == "-"){
-                beforeplaces = beforeplaces + 1;
+        }
+        for i in most_inner_parth+1..operator_places.len() {
+            current_letter = &input[i..i + 1];
+            println!("ran most inner parth = {}", most_inner_parth);
+            if current_letter == ")"{
+                break;
             }
             else{
-                break;
+                places_after_most_inner = places_after_most_inner+1;
+                println!("iterated places after most inner");
             }
         }
-        loop{
-            ch_p = (int_cop  + afterplaces + 1) as usize;
-            if ch_p == input.len(){
-                break;
+        let mut new_input = (&input[most_inner_parth+1 as usize..(most_inner_parth +places_after_most_inner) as usize]).to_string();
+        for i in 0..operator_places.len() {
+            let mut beforeplaces = 0;
+            let mut afterplaces = 0;
+            let current_operator = operator_places[i];
+            let mut int_cop:i32 = 0;
+            for s in 0..new_input.len(){
+                current_letter = &new_input[s..s + 1];
+                if current_operator == current_letter{
+                    let str_cop = s.to_string();
+                    int_cop = str_cop.parse::<i32>().unwrap();
+                }
             }
-            let ch = &input[ch_p..ch_p+1];
-            let chstring = ch.to_string();
-            if true == (is_string_numeric(chstring)){
-                afterplaces = afterplaces + 1;
+            let mut ch_p:usize;
+            loop{
+                println!(" This  is the input as of line 256 {}", new_input);
+                ch_p = (int_cop - beforeplaces) as usize;
+                if ch_p == 0{
+                    break;
+                }
+                let ch = &new_input[ch_p-1..ch_p];
+                let chstring = ch.to_string();
+                if true ==  (is_string_numeric(chstring)){
+                    beforeplaces = beforeplaces + 1;
+                }
+                else if true ==  (ch.to_string() == "."){
+                    beforeplaces = beforeplaces + 1;
+                }
+                else if true ==  (ch.to_string() == "-"){
+                    beforeplaces = beforeplaces + 1;
+                }
+                else{
+                    break;
+                }
             }
-            else if true == (ch.to_string() == "."){
-                afterplaces = afterplaces + 1;
+            loop{
+                ch_p = (int_cop  + afterplaces + 1) as usize;
+                if ch_p == new_input.len(){
+                    break;
+                }
+                let ch = &new_input[ch_p..ch_p+1];
+                let chstring = ch.to_string();
+                if true == (is_string_numeric(chstring)){
+                    afterplaces = afterplaces + 1;
+                }
+                else if true == (ch.to_string() == "."){
+                    afterplaces = afterplaces + 1;
+                }
+                else if true == (ch.to_string() == "-"){
+                    afterplaces = afterplaces + 1;
+                }
+                else{
+                    break;
+                }
+                println!("Afterplaces iterated");
             }
-            else if true == (ch.to_string() == "-"){
-                afterplaces = afterplaces + 1;
+            let firstnum = &new_input[(int_cop-beforeplaces) as usize..(int_cop) as usize];
+            let firstnumf32:f32 = firstnum.parse::<f32>().unwrap();
+            println!("2: firstnum is {}",firstnum);
+            let mut secnum;
+            secnum =&new_input[(int_cop+1) as usize..(int_cop+afterplaces+1) as usize];
+            println!("3: secnum is {}",secnum);
+            let secnumf32:f32 = secnum.parse::<f32>().unwrap();
+            if current_operator == exponent{
+                answer = firstnumf32.powf(secnumf32);
             }
-            else{
-                break;
+            if current_operator ==  multiplication{
+                answer = firstnumf32 * secnumf32;
             }
-            println!("Afterplaces iterated");
+            if current_operator == division{
+                answer = firstnumf32 / secnumf32;
+            }
+            if current_operator == addition{
+                answer = firstnumf32 + secnumf32;
+            }
+            if current_operator == subtraction{
+                answer = firstnumf32 - secnumf32;
+            }
+            let mut coolstring = new_input;
+            println!("4: beforeplaces is {}\n5: afterplaces is {}",beforeplaces,afterplaces);
+            let inputcash1 = &coolstring[0 as usize..int_cop as usize-beforeplaces as usize];
+            let inputcash2 = answer.to_string();
+            let inputcash3 = &coolstring[int_cop as usize+afterplaces as usize .. coolstring.len() as usize];
+            new_input = ("").parse().unwrap();
+            new_input.push_str(inputcash1);
+            new_input.push_str(&inputcash2);
+            new_input.push_str(inputcash3);
         }
-        let firstnum = &input[(int_cop-beforeplaces) as usize..(int_cop) as usize];
-        let firstnumf32:f32 = firstnum.parse::<f32>().unwrap();
-        println!("2: firstnum is {}",firstnum);
-        let mut secnum;
-        secnum =&input[(int_cop+1) as usize..(int_cop+afterplaces+1) as usize];
-        println!("3: secnum is {}",secnum);
-        let secnumf32:f32 = secnum.parse::<f32>().unwrap();
-        if current_operator == exponent{
-            answer = firstnumf32.powf(secnumf32);
-        }
-        if current_operator ==  multiplication{
-            answer = firstnumf32 * secnumf32;
-        }
-        if current_operator == division{
-            answer = firstnumf32 / secnumf32;
-        }
-        if current_operator == addition{
-            answer = firstnumf32 + secnumf32;
-        }
-        if current_operator == subtraction{
-            answer = firstnumf32 - secnumf32;
-        }
-        let mut coolstring = input;
-        println!("4: beforeplaces is {}\n5: afterplaces is {}",beforeplaces,afterplaces);
-        let inputcash1 = &coolstring[0 as usize..(int_cop-beforeplaces) as usize];
-        let inputcash2 = answer.to_string();
-        let inputcash3 = &coolstring[int_cop as usize+afterplaces as usize .. coolstring.len() as usize];
-        let nice = coolstring.len()-1 as usize;
-        println!("On line 295, inputcash3 is {} int_cop is {} and afterplaces is {} and coolstring.len()-1 is {} and coolstring is {}", inputcash3, int_cop, afterplaces, nice, coolstring);
-        input = ("").parse().unwrap();
-        input.push_str(inputcash1);
-        input.push_str(&inputcash2);
-        input.push_str(inputcash3);
     }
     return answer;
 }
