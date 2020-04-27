@@ -12,6 +12,8 @@ use kiss_ui::button::*;
 use kiss3d::light::Light;
 use kiss3d::window::Window;
 use na::Point3;
+use kiss3d::event::Key::*;
+use kiss3d::event::MouseButton::*;
 
 fn main(){
         kiss_ui::show_gui(|| {
@@ -91,7 +93,7 @@ fn repeater(equation: String, min: String, max: String, rate: String, x: &mut Ve
         result = solve_string((equNew).to_string()) as f32;
         y.push(result);
         z.push(0.0);
-        println!("6: {} gives us {} when put into {}",x[(i/frate) as usize],y[(i/frate) as usize],equRaw);
+        //println!("6: {} gives us {} when put into {}",x[(i/frate) as usize],y[(i/frate) as usize],equRaw);
         /*
         if(result == imaginary){
             z.append(imaginary portion)
@@ -148,8 +150,17 @@ fn graph(x1:&Vec<f32>, y1:&Vec<f32>, z1:&Vec<f32>){
     let boxy = [10.0, 0.0, -10.0,0.0];
     let boxz = [0.0, 10.0, 0.0,-10.0];
     let mut window = Window::new("Kiss3d: lines");
+    let look = Point3::new(0.0, 1.0, -10.0);
+    let start = Point3::new(0.0, 1.0, 0.0);
+    let mut camera = kiss3d::camera::FirstPerson::new(look ,start);
+    camera.set_yaw_step(0.003);
+    camera.set_pitch_step(0.003);
+    camera.rebind_down_key(Option::from(kiss3d::event::Key::S));
+    camera.rebind_left_key(Option::from(kiss3d::event::Key::A));
+    camera.rebind_right_key(Option::from(kiss3d::event::Key::D));
+    camera.rebind_up_key(Option::from(kiss3d::event::Key::W));
     window.set_light(Light::StickToCamera);
-    while window.render() {
+    while window.render_with_camera(&mut camera) {
         //makes reference
         for i in  1..boxx.len(){
             let cx = boxx[i];
@@ -157,7 +168,7 @@ fn graph(x1:&Vec<f32>, y1:&Vec<f32>, z1:&Vec<f32>){
             let cz = boxz[i];
             corda = Point3::new(0.0, 0.0, 0.0);
             cordb = Point3::new(cx, cy, cz);
-            window.draw_line(&corda, &cordb, &Point3::new(1.0, 0.0, 0.0));
+            window.draw_line(&corda, &cordb, &Point3::new(0.0, 0.0, 1.0));
         }
         //makes graph
         for i in  1..x1.len(){
@@ -289,7 +300,7 @@ fn solve_string(mut input:String) -> f32 {
         }
         let mut coolstring = input;
         println!("4: beforeplaces is {}\n5: afterplaces is {}",beforeplaces,afterplaces);
-        let inputcash1 = &coolstring[0 as usize..int_cop as usize-beforeplaces as usize];
+        let inputcash1 = &coolstring[0 as usize..(int_cop-beforeplaces) as usize];
         let inputcash2 = answer.to_string();
         let inputcash3 = &coolstring[int_cop as usize+afterplaces as usize .. coolstring.len() as usize];
         let nice = coolstring.len()-1 as usize;
