@@ -14,6 +14,7 @@ use kiss3d::window::Window;
 use na::Point3;
 use kiss3d::event::Key::*;
 use kiss3d::event::MouseButton::*;
+use kiss3d::event::*;
 
 fn main(){
         kiss_ui::show_gui(|| {
@@ -124,6 +125,7 @@ fn show_alert_message(clicked: Button) {
     let text_box4 = dialog.get_child("rate").unwrap()
         .try_downcast::<TextBox>().ok().expect("child rate was not a TextBox!");
     let rate = text_box4.get_text();
+    dialog.hide();
     passthrough(equ.to_string(), min.to_string(), max.to_string(), rate.to_string(), x, y, z);
 }
 
@@ -146,13 +148,14 @@ fn passthrough(equation: String, min: String, max: String, rate: String, mut x1:
 fn graph(x1:&Vec<f32>, y1:&Vec<f32>, z1:&Vec<f32>){
     let mut corda;
     let mut cordb;
-    let boxx = [0.0, 0.0, 0.0, 0.0];
-    let boxy = [10.0, 0.0, -10.0,0.0];
-    let boxz = [0.0, 10.0, 0.0,-10.0];
+    let boxx = [0.0,0.0, 0.0, 0.0, 0.0];
+    let boxy = [0.0,10.0, 0.0, -10.0,0.0];
+    let boxz = [0.0,0.0, 10.0, 0.0,-10.0];
     let mut window = Window::new("Kiss3d: lines");
     let look = Point3::new(0.0, 1.0, -10.0);
     let start = Point3::new(0.0, 1.0, 0.0);
     let mut camera = kiss3d::camera::FirstPerson::new(look ,start);
+    let manager = EventManager::new();
     camera.set_yaw_step(0.003);
     camera.set_pitch_step(0.003);
     camera.rebind_down_key(Option::from(kiss3d::event::Key::S));
@@ -235,7 +238,6 @@ fn solve_string(mut input:String) -> f32 {
         let isletter:bool = true;
         let mut ch_p:usize;
         loop{
-            println!(" This  is the input as of line 234 {}", input);
             ch_p = (int_cop - beforeplaces) as usize;
             if ch_p == 0{
                 break;
@@ -274,7 +276,6 @@ fn solve_string(mut input:String) -> f32 {
             else{
                 break;
             }
-            println!("Afterplaces iterated");
         }
         let firstnum = &input[(int_cop-beforeplaces) as usize..(int_cop) as usize];
         let firstnumf32:f32 = firstnum.parse::<f32>().unwrap();
@@ -299,12 +300,12 @@ fn solve_string(mut input:String) -> f32 {
             answer = firstnumf32 - secnumf32;
         }
         let mut coolstring = input;
-        println!("4: beforeplaces is {}\n5: afterplaces is {}",beforeplaces,afterplaces);
+        println!("4: beforeplaces is {}",beforeplaces);
+        println!("5: afterplaces is {}",afterplaces);
         let inputcash1 = &coolstring[0 as usize..(int_cop-beforeplaces) as usize];
         let inputcash2 = answer.to_string();
         let inputcash3 = &coolstring[int_cop as usize+afterplaces as usize .. coolstring.len() as usize];
         let nice = coolstring.len()-1 as usize;
-        println!("On line 295, inputcash3 is {} int_cop is {} and afterplaces is {} and coolstring.len()-1 is {} and coolstring is {}", inputcash3, int_cop, afterplaces, nice, coolstring);
         input = ("").parse().unwrap();
         input.push_str(inputcash1);
         input.push_str(&inputcash2);
