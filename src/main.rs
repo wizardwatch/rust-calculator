@@ -155,7 +155,7 @@ fn graph(x1:&Vec<f32>, y1:&Vec<f32>, z1:&Vec<f32>){
     let look = Point3::new(0.0, 1.0, -10.0);
     let start = Point3::new(0.0, 1.0, 0.0);
     let mut camera = kiss3d::camera::FirstPerson::new(look ,start);
-    let manager = EventManager::new();
+    //let manager = EventManager::new();
     camera.set_yaw_step(0.003);
     camera.set_pitch_step(0.003);
     camera.rebind_down_key(Option::from(kiss3d::event::Key::S));
@@ -188,6 +188,7 @@ fn graph(x1:&Vec<f32>, y1:&Vec<f32>, z1:&Vec<f32>){
     }
 }
 fn solve_string(mut input:String) -> f32 {
+    println!("The original input is {}", input);
     let mut answer:f32 = 404.0;
     let mut operator_places = vec![];
     let exponent = "^";
@@ -199,52 +200,34 @@ fn solve_string(mut input:String) -> f32 {
     let mut num_of_parth = 0;
     let mut most_inner_parth = 0;
     let mut places_after_most_inner = 0;
+    let mut runner = 0;
     // code here
-    for i in 0..input.len() {
-        current_letter = &input[i..i + 1];
-        if current_letter == exponent {
-            operator_places.push(exponent);
-        }
-    }
 
     for i in 0..input.len() {
-        current_letter = &input[i..i + 1];
-        if current_letter == multiplication {
-            operator_places.push(multiplication);
-        } else if current_letter == division {
-            operator_places.push(division);
-        }
-    }
-    for i in 0..input.len() {
-        current_letter = &input[i..i + 1];
-        if current_letter == addition{
-            operator_places.push(addition);
-        }
-
-        else if current_letter == subtraction{
-            operator_places.push(subtraction);
-        }
-    }
-
-    for i in 0..operator_places.len() {
         current_letter = &input[i..i + 1];
         if current_letter == "("{
             num_of_parth = num_of_parth +1
         }
     }
     while num_of_parth > 0 {
+        most_inner_parth = 0;
+        places_after_most_inner = 0;
+        runner = 0;
         println!("I repeated num_of_parth");
-        for i in 0..operator_places.len() {
+        for i in 0..input.len() {
             current_letter = &input[i..i + 1];
             if current_letter == "("{
-                most_inner_parth = most_inner_parth +1
+                most_inner_parth = most_inner_parth + runner;
+                runner = 0;
             }
             else if current_letter == ")"{
                 break;
             }
+            runner = runner + 1;
         }
-        for i in most_inner_parth+1..operator_places.len() {
-            current_letter = &input[i..i + 1];
+        println!{"most inner_parth = {}", most_inner_parth};
+        for i in most_inner_parth..input.len() {
+            current_letter = &input[i..i+1];
             println!("ran most inner parth = {}", most_inner_parth);
             if current_letter == ")"{
                 break;
@@ -254,15 +237,42 @@ fn solve_string(mut input:String) -> f32 {
                 println!("iterated places after most inner");
             }
         }
-        let mut new_input = (&input[most_inner_parth+1 as usize..(most_inner_parth +places_after_most_inner) as usize]).to_string();
+        let mut new_input = (&input[(most_inner_parth+1) as usize..(most_inner_parth +places_after_most_inner) as usize]).to_string();
+        for i in 0..new_input.len() {
+            current_letter = &new_input[i..i + 1];
+            if current_letter == exponent {
+                operator_places.push(exponent);
+            }
+        }
+        println!(" This  is the input as of line 247 {}", new_input);
+        for i in 0..new_input.len() {
+            current_letter = &new_input[i..i + 1];
+            if current_letter == multiplication {
+                operator_places.push(multiplication);
+            } else if current_letter == division {
+                operator_places.push(division);
+            }
+        }
+        for i in 0..new_input.len() {
+            current_letter = &new_input[i..i + 1];
+            if current_letter == addition{
+                operator_places.push(addition);
+            }
+
+            else if current_letter == subtraction{
+                operator_places.push(subtraction);
+            }
+        }
         for i in 0..operator_places.len() {
-            let mut beforeplaces = 0;
-            let mut afterplaces = 0;
+            let mut beforeplaces = 1;
+            let mut afterplaces = 1;
             let current_operator = operator_places[i];
             let mut int_cop:i32 = 0;
             for s in 0..new_input.len(){
+                println!("test 1");
                 current_letter = &new_input[s..s + 1];
                 if current_operator == current_letter{
+                    println!("test 2");
                     let str_cop = s.to_string();
                     int_cop = str_cop.parse::<i32>().unwrap();
                 }
@@ -270,7 +280,9 @@ fn solve_string(mut input:String) -> f32 {
             let mut ch_p:usize;
             loop{
                 println!(" This  is the input as of line 256 {}", new_input);
+                println!("int_cop = {}", int_cop);
                 ch_p = (int_cop - beforeplaces) as usize;
+                println!("ch_p = {}", ch_p);
                 if ch_p == 0{
                     break;
                 }
@@ -310,6 +322,7 @@ fn solve_string(mut input:String) -> f32 {
                 }
                 println!("Afterplaces iterated");
             }
+            println!("{}", beforeplaces);
             let firstnum = &new_input[(int_cop-beforeplaces) as usize..(int_cop) as usize];
             let firstnumf32:f32 = firstnum.parse::<f32>().unwrap();
             println!("2: firstnum is {}",firstnum);
@@ -332,16 +345,31 @@ fn solve_string(mut input:String) -> f32 {
             if current_operator == subtraction{
                 answer = firstnumf32 - secnumf32;
             }
+            println!("The answer is {}", answer);
             let mut coolstring = new_input;
             println!("4: beforeplaces is {}\n5: afterplaces is {}",beforeplaces,afterplaces);
             let inputcash1 = &coolstring[0 as usize..int_cop as usize-beforeplaces as usize];
             let inputcash2 = answer.to_string();
-            let inputcash3 = &coolstring[int_cop as usize+afterplaces as usize .. coolstring.len() as usize];
+            let inputcash3 = &coolstring[(int_cop +afterplaces+1) as usize .. coolstring.len() as usize];
             new_input = ("").parse().unwrap();
             new_input.push_str(inputcash1);
             new_input.push_str(&inputcash2);
             new_input.push_str(inputcash3);
+
         }
+        let mut new_input = (&input[(most_inner_parth+1) as usize..(most_inner_parth +places_after_most_inner) as usize]).to_string();
+
+        println!("The answer is {}", answer);
+        let mut inputclone = input.clone();
+        let inputcash1 = &inputclone[0 as usize..most_inner_parth as usize];
+        let inputcash2 = answer.to_string();
+        let inputcash3 = &inputclone[(most_inner_parth + places_after_most_inner +1) as usize..(input.len()) as usize];
+        input = ("").parse().unwrap();
+        input.push_str(inputcash1);
+        input.push_str(&inputcash2);
+        input.push_str(inputcash3);
+        num_of_parth = num_of_parth -1;
+        operator_places.clear();
     }
     return answer;
 }
