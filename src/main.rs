@@ -202,6 +202,11 @@ fn solve_string(mut input:String) -> f32 {
     let mut places_after_most_inner = 0;
     let mut runner = 0;
     // code here
+    let before_input = input.clone();
+    input = "".to_string();
+    input.push_str("(");
+    input.push_str(&before_input);
+    input.push_str(")");
 
     for i in 0..input.len() {
         current_letter = &input[i..i + 1];
