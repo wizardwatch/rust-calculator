@@ -102,7 +102,6 @@ fn repeater(equation: String, min: String, max: String, rate: String, x: &mut Ve
         i = i + frate;
     }
 }
-
 fn replace(current: f32, equRaw: String) -> String {
     let mut equNew:String = "owo".to_string();
     let equRaw2 = &equRaw;
@@ -116,7 +115,6 @@ fn replace(current: f32, equRaw: String) -> String {
     }
     return equNew;
 }
-
 fn contains(region: String, target: String) -> i32 {
     let mut value:i32 = -1;
     for i in 0..region.len() {
