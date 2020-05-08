@@ -80,34 +80,6 @@ fn contains(region: String, target: String) -> i32 {
     return value;
 }
 
-fn repeater(equation: String, min: String, max: String, rate: String, x: &mut Vec<f32>, y: &mut Vec<f32>, z: &mut Vec<f32>){
-    let mut i:f32 = min.parse().unwrap();
-    let fmax:f32 = max.parse().unwrap();
-    let frate:f32 = rate.parse().unwrap();
-    let equRaw = equation;
-    let mut equNew:String = "owo".to_string();
-    let mut result:f32= 0.0;
-    while !(i > (fmax)) {
-        equNew = replace(i, equRaw.to_string());
-        x.push(i);
-        println!("1: Solving {}",equNew);
-        result = solve_string((equNew).to_string()) as f32;
-        y.push(result);
-        z.push(0.0);
-        //println!("6: {} gives us {} when put into {}",x[(i/frate) as usize],y[(i/frate) as usize],equRaw);
-        /*
-        if(result == imaginary){
-            z.append(imaginary portion)
-            y.append(real portion)
-        }else{
-            z.append(0)
-            y.append(result)
-        }
-        */
-        i = i + frate;
-    }
-}
-
 fn show_alert_message(clicked: Button) {
     let x:Vec<f32> = vec![];
     let y:Vec<f32> = vec![];
@@ -130,12 +102,6 @@ fn show_alert_message(clicked: Button) {
 }
 
 fn passthrough(equation: String, min: String, max: String, rate: String, mut x1: Vec<f32>, mut y1: Vec<f32>, mut z1: Vec<f32>){
-    /*
-    let equ2 = &equation;
-    let min2 = &min;
-    let max2 = &max;
-    let rate2 = &rate;
-    */
     let x2 = &mut x1;
     let y2 = &mut y1;
     let z2 = &mut z1;
@@ -144,6 +110,23 @@ fn passthrough(equation: String, min: String, max: String, rate: String, mut x1:
     println!("7: Finished Graph")
 }
 
+fn repeater(equation: String, min: String, max: String, rate: String, x: &mut Vec<f32>, y: &mut Vec<f32>, z: &mut Vec<f32>){
+    let mut i:f32 = min.parse().unwrap();
+    let fmax:f32 = max.parse().unwrap();
+    let frate:f32 = rate.parse().unwrap();
+    let equRaw = equation;
+    let mut equNew:String = "owo".to_string();
+    let mut result:f32= 0.0;
+    while !(i > (fmax)) {
+        equNew = replace(i, equRaw.to_string());
+        x.push(i);
+        println!("1: Solving {}",equNew);
+        result = solve_string((equNew).to_string()) as f32;
+        y.push(result);
+        z.push(0.0);
+        i = i + frate;
+    }
+}
 
 fn graph(x1:&Vec<f32>, y1:&Vec<f32>, z1:&Vec<f32>){
     let mut corda;
