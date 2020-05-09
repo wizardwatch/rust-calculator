@@ -1,5 +1,5 @@
 #[macro_use]
-//imports crates. written by Wyatt and Ben
+//imports crates. written by me and partner
 extern crate kiss_ui;
 extern crate kiss3d;
 extern crate nalgebra as na;
@@ -15,7 +15,7 @@ use na::Point3;
 use kiss3d::event::Key::*;
 use kiss3d::event::MouseButton::*;
 use kiss3d::event::*;
-//The main function is the function that actually runs. Written by Ben
+//The main function is the function that actually runs. Written by partner
 fn main(){
         kiss_ui::show_gui(|| {
             Dialog::new(
@@ -54,7 +54,7 @@ fn main(){
         Err(e) => println!("input faiwed owO. Pwease repowt to github uwu.")
     }
 }
-// Finds x or X and replaces it with a number.
+// Finds x or X and replaces it with a number. written by partner
 fn replace(current: f32, equRaw: String) -> String {
     let mut equNew:String = "owo".to_string();
     let equRaw2 = &equRaw;
@@ -68,7 +68,7 @@ fn replace(current: f32, equRaw: String) -> String {
     }
     return equNew;
 }
-//determines if a string is contained within another string. Used for finding if a expression contains x.
+//determines if a string is contained within another string. Used for finding if a expression contains x. written by partner
 fn contains(region: String, target: String) -> i32 {
     let mut value:i32 = -1;
     for i in 0..region.len() {
@@ -80,7 +80,7 @@ fn contains(region: String, target: String) -> i32 {
     }
     return value;
 }
-//repeats solve string. Written by Ben
+//repeats solve string. Written by partner
 fn repeater(equation: String, min: String, max: String, rate: String, x: &mut Vec<f32>, y: &mut Vec<f32>, z: &mut Vec<f32>){
     let mut i:f32 = min.parse().unwrap();
     let fmax:f32 = max.parse().unwrap();
@@ -109,7 +109,7 @@ fn repeater(equation: String, min: String, max: String, rate: String, x: &mut Ve
         i = i + frate;
     }
 }
-//weird ui stuff. it creates buttons and stuff. Written by Ben
+//weird ui stuff. it creates buttons and stuff. Written by partner
 fn show_alert_message(clicked: Button) {
     let x:Vec<f32> = vec![];
     let y:Vec<f32> = vec![];
@@ -130,7 +130,7 @@ fn show_alert_message(clicked: Button) {
     dialog.hide();
     passthrough(equ.to_string(), min.to_string(), max.to_string(), rate.to_string(), x, y, z);
 }
-//declares and passes variables. Written By Ben
+//declares and passes variables. Written By partner
 fn passthrough(equation: String, min: String, max: String, rate: String, mut x1: Vec<f32>, mut y1: Vec<f32>, mut z1: Vec<f32>){
     let x2 = &mut x1;
     let y2 = &mut y1;
@@ -140,7 +140,7 @@ fn passthrough(equation: String, min: String, max: String, rate: String, mut x1:
     println!("7: Finished Graph")
 }
 
-//graphs the results of solve string. Written by Ben
+//graphs the results of solve string. Written by partner
 fn graph(x1:&Vec<f32>, y1:&Vec<f32>, z1:&Vec<f32>){
     let mut corda;
     let mut cordb;
@@ -183,7 +183,7 @@ fn graph(x1:&Vec<f32>, y1:&Vec<f32>, z1:&Vec<f32>){
         }
     }
 }
-//Takes in a string and outputs a f32 float.
+//Takes in a string and outputs a f32 float. Written by me.
 fn solve_string(mut input:String) -> f32 {
     println!("The original input is {}", input);
     //declares stuff.
@@ -390,7 +390,7 @@ fn solve_string(mut input:String) -> f32 {
     //returns the answer as f32
     return answer;
 }
-//determines if the characters in a string are numeric.
+//determines if the characters in a string are numeric. written by me
 fn is_string_numeric(str: String) -> bool {
     let mut numeric = 0;
     for c in str.chars() {
