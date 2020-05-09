@@ -1,9 +1,9 @@
 #[macro_use]
+//imports crates. written by Wyatt and Ben
 extern crate kiss_ui;
 extern crate kiss3d;
 extern crate nalgebra as na;
 extern crate num;
-
 use kiss_ui::prelude::*;
 use kiss_ui::container::*;
 use kiss_ui::dialog::Dialog;
@@ -15,7 +15,7 @@ use na::Point3;
 use kiss3d::event::Key::*;
 use kiss3d::event::MouseButton::*;
 use kiss3d::event::*;
-
+//The main function is the function that actually runs. Written by Ben
 fn main(){
         kiss_ui::show_gui(|| {
             Dialog::new(
@@ -54,6 +54,7 @@ fn main(){
         Err(e) => println!("input faiwed owO. Pwease repowt to github uwu.")
     }
 }
+// Finds x or X and replaces it with a number.
 fn replace(current: f32, equRaw: String) -> String {
     let mut equNew:String = "owo".to_string();
     let equRaw2 = &equRaw;
@@ -67,7 +68,7 @@ fn replace(current: f32, equRaw: String) -> String {
     }
     return equNew;
 }
-
+//determines if a string is contained within another string. Used for finding if a expression contains x.
 fn contains(region: String, target: String) -> i32 {
     let mut value:i32 = -1;
     for i in 0..region.len() {
@@ -79,7 +80,7 @@ fn contains(region: String, target: String) -> i32 {
     }
     return value;
 }
-
+//repeats solve string. Written by Ben
 fn repeater(equation: String, min: String, max: String, rate: String, x: &mut Vec<f32>, y: &mut Vec<f32>, z: &mut Vec<f32>){
     let mut i:f32 = min.parse().unwrap();
     let fmax:f32 = max.parse().unwrap();
@@ -96,6 +97,7 @@ fn repeater(equation: String, min: String, max: String, rate: String, x: &mut Ve
         z.push(0.0);
         //println!("6: {} gives us {} when put into {}",x[(i/frate) as usize],y[(i/frate) as usize],equRaw);
         /*
+        future use. ignore me for now
         if(result == imaginary){
             z.append(imaginary portion)
             y.append(real portion)
@@ -107,7 +109,7 @@ fn repeater(equation: String, min: String, max: String, rate: String, x: &mut Ve
         i = i + frate;
     }
 }
-
+//weird ui stuff. it creates buttons and stuff. Written by Ben
 fn show_alert_message(clicked: Button) {
     let x:Vec<f32> = vec![];
     let y:Vec<f32> = vec![];
@@ -128,7 +130,7 @@ fn show_alert_message(clicked: Button) {
     dialog.hide();
     passthrough(equ.to_string(), min.to_string(), max.to_string(), rate.to_string(), x, y, z);
 }
-
+//declares and passes variables. Written By Ben
 fn passthrough(equation: String, min: String, max: String, rate: String, mut x1: Vec<f32>, mut y1: Vec<f32>, mut z1: Vec<f32>){
     /*
     let equ2 = &equation;
@@ -144,7 +146,7 @@ fn passthrough(equation: String, min: String, max: String, rate: String, mut x1:
     println!("7: Finished Graph")
 }
 
-
+//graphs the results of solve string. Written by Ben
 fn graph(x1:&Vec<f32>, y1:&Vec<f32>, z1:&Vec<f32>){
     let mut corda;
     let mut cordb;
@@ -187,8 +189,10 @@ fn graph(x1:&Vec<f32>, y1:&Vec<f32>, z1:&Vec<f32>){
         }
     }
 }
+//Takes in a string and outputs a f32 float.
 fn solve_string(mut input:String) -> f32 {
     println!("The original input is {}", input);
+    //declares stuff.
     let mut answer:f32 = 404.0;
     let mut operator_places = vec![];
     let exponent = "^";
@@ -201,24 +205,28 @@ fn solve_string(mut input:String) -> f32 {
     let mut most_inner_parth = 0;
     let mut places_after_most_inner = 0;
     let mut runner = 0;
-    // code here
+    //creates a clone of input in order to retain the original input.
     let before_input = input.clone();
+    //adds parenthesis on either side of the equation.
     input = "".to_string();
     input.push_str("(");
     input.push_str(&before_input);
     input.push_str(")");
-
+    //finds the number of opening parenthesis
     for i in 0..input.len() {
         current_letter = &input[i..i + 1];
         if current_letter == "("{
             num_of_parth = num_of_parth +1
         }
     }
+    //runs the solving part of solve string once for each opening parenthesis
     while num_of_parth > 0 {
+        //resets variables
         most_inner_parth = 0;
         places_after_most_inner = 0;
         runner = 0;
         println!("I repeated num_of_parth");
+        //determines the location of the innermost opening and closing parenthesis
         for i in 0..input.len() {
             current_letter = &input[i..i + 1];
             if current_letter == "("{
@@ -242,7 +250,9 @@ fn solve_string(mut input:String) -> f32 {
                 println!("iterated places after most inner");
             }
         }
+        // creates an input to be fed to the operator detector and solver.
         let mut new_input = (&input[(most_inner_parth+1) as usize..(most_inner_parth +places_after_most_inner) as usize]).to_string();
+        //adds operations in the order of pemdas
         for i in 0..new_input.len() {
             current_letter = &new_input[i..i + 1];
             if current_letter == exponent {
@@ -268,6 +278,7 @@ fn solve_string(mut input:String) -> f32 {
                 operator_places.push(subtraction);
             }
         }
+        //finds the place of the current operator.
         for i in 0..operator_places.len() {
             let mut beforeplaces = 1;
             let mut afterplaces = 1;
@@ -283,6 +294,7 @@ fn solve_string(mut input:String) -> f32 {
                 }
             }
             let mut ch_p:usize;
+            //determines the number of places before the operator that are numbers
             loop{
                 println!(" This  is the input as of line 256 {}", new_input);
                 println!("int_cop = {}", int_cop);
@@ -306,6 +318,7 @@ fn solve_string(mut input:String) -> f32 {
                     break;
                 }
             }
+            //determines the number of places after the operator that are numbers.
             loop{
                 ch_p = (int_cop  + afterplaces + 1) as usize;
                 if ch_p == new_input.len(){
@@ -328,13 +341,16 @@ fn solve_string(mut input:String) -> f32 {
                 println!("Afterplaces iterated");
             }
             println!("{}", beforeplaces);
+            //takes new input and before places and comes up with first number to be operatored on.
             let firstnum = &new_input[(int_cop-beforeplaces) as usize..(int_cop) as usize];
             let firstnumf32:f32 = firstnum.parse::<f32>().unwrap();
             println!("2: firstnum is {}",firstnum);
+            //does the same as first num except after places.
             let mut secnum;
             secnum =&new_input[(int_cop+1) as usize..(int_cop+afterplaces+1) as usize];
             println!("3: secnum is {}",secnum);
             let secnumf32:f32 = secnum.parse::<f32>().unwrap();
+            //does the corresponding math as requested by current operator.
             if current_operator == exponent{
                 answer = firstnumf32.powf(secnumf32);
             }
@@ -350,6 +366,7 @@ fn solve_string(mut input:String) -> f32 {
             if current_operator == subtraction{
                 answer = firstnumf32 - secnumf32;
             }
+            //edits new input to equal new input minus the operator and numbers acted upon.
             println!("The answer is {}", answer);
             let mut coolstring = new_input;
             println!("4: beforeplaces is {}\n5: afterplaces is {}",beforeplaces,afterplaces);
@@ -363,7 +380,7 @@ fn solve_string(mut input:String) -> f32 {
 
         }
         let mut new_input = (&input[(most_inner_parth+1) as usize..(most_inner_parth +places_after_most_inner) as usize]).to_string();
-
+        //lets input be modified from the answer of the parenthesis
         println!("The answer is {}", answer);
         let mut inputclone = input.clone();
         let inputcash1 = &inputclone[0 as usize..most_inner_parth as usize];
@@ -376,8 +393,10 @@ fn solve_string(mut input:String) -> f32 {
         num_of_parth = num_of_parth -1;
         operator_places.clear();
     }
+    //returns the answer as f32
     return answer;
 }
+//determines if the characters in a string are numeric.
 fn is_string_numeric(str: String) -> bool {
     let mut numeric = 0;
     for c in str.chars() {
