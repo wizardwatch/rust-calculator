@@ -22,15 +22,19 @@ fn main(){
                 Grid::new(
                     children![
                     Label::new("Enter a message:"),
+                    Label::new("Equation:"),
                     TextBox::new()
                         .set_visible_columns(20)
                         .set_name("equ_raw"),
+                    Label::new("Minimum:"),
                     TextBox::new()
                         .set_visible_columns(20)
                         .set_name("min"),
+                    Label::new("Maximum:"),
                     TextBox::new()
                         .set_visible_columns(20)
                         .set_name("max"),
+                    Label::new("Rate:"),
                     TextBox::new()
                         .set_visible_columns(20)
                         .set_name("rate"),
