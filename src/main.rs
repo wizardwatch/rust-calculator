@@ -15,7 +15,7 @@ use na::Point3;
 use kiss3d::event::Key::*;
 use kiss3d::event::MouseButton::*;
 use kiss3d::event::*;
-//The main function is the function that actually runs. Written by partner
+
 fn main(){
         kiss_ui::show_gui(|| {
             Dialog::new(
@@ -58,7 +58,7 @@ fn main(){
         Err(e) => println!("input faiwed owO. Pwease repowt to github uwu.")
     }
 }
-// Finds x or X and replaces it with a number. written by partner
+
 fn replace(current: f32, equRaw: String) -> String {
     let mut equNew:String = "owo".to_string();
     let equRaw2 = &equRaw;
@@ -72,7 +72,7 @@ fn replace(current: f32, equRaw: String) -> String {
     }
     return equNew;
 }
-//determines if a string is contained within another string. Used for finding if a expression contains x. written by partner
+
 fn contains(region: String, target: String) -> i32 {
     let mut value:i32 = -1;
     for i in 0..region.len() {
@@ -84,7 +84,7 @@ fn contains(region: String, target: String) -> i32 {
     }
     return value;
 }
-//repeats solve string. Written by partner
+
 fn repeater(equation: String, min: String, max: String, rate: String, x: &mut Vec<f32>, y: &mut Vec<f32>, z: &mut Vec<f32>){
     let mut i:f32 = min.parse().unwrap();
     let fmax:f32 = max.parse().unwrap();
@@ -113,7 +113,6 @@ fn repeater(equation: String, min: String, max: String, rate: String, x: &mut Ve
         i = i + frate;
     }
 }
-//weird ui stuff. it creates buttons and stuff. Written by partner
 
 fn show_alert_message(clicked: Button) {
     let x:Vec<f32> = vec![];
@@ -145,7 +144,6 @@ fn passthrough(equation: String, min: String, max: String, rate: String, mut x1:
     println!("7: Finished Graph")
 }
 
-//graphs the results of solve string. Written by partner
 
 
 fn graph(x1:&Vec<f32>, y1:&Vec<f32>, z1:&Vec<f32>){
@@ -190,7 +188,7 @@ fn graph(x1:&Vec<f32>, y1:&Vec<f32>, z1:&Vec<f32>){
         }
     }
 }
-//Takes in a string and outputs a f32 float. Written by me.
+
 fn solve_string(mut input:String) -> f32 {
     println!("The original input is {}", input);
     //declares stuff.
