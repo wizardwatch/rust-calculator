@@ -146,47 +146,7 @@ fn passthrough(equation: String, min: String, max: String, rate: String, mut x1:
 }
 
 //graphs the results of solve string. Written by partner
-fn repeater(equation: String, min: String, max: String, rate: String, x: &mut Vec<f32>, y: &mut Vec<f32>, z: &mut Vec<f32>){
-    let mut i:f32 = min.parse().unwrap();
-    let fmax:f32 = max.parse().unwrap();
-    let frate:f32 = rate.parse().unwrap();
-    let equRaw = equation;
-    let mut equNew:String = "owo".to_string();
-    let mut result:f32= 0.0;
-    while !(i > (fmax)) {
-        equNew = replace(i, equRaw.to_string());
-        x.push(i);
-        println!("1: Solving {}",equNew);
-        result = solve_string((equNew).to_string()) as f32;
-        y.push(result);
-        z.push(0.0);
-        i = i + frate;
-    }
-}
-fn replace(current: f32, equRaw: String) -> String {
-    let mut equNew:String = "owo".to_string();
-    let equRaw2 = &equRaw;
-    let replacewith:String = current.to_string();
-    if contains(equRaw.to_string(), 'x'.to_string())!=-1{
-        equNew = equRaw.replace('x', &replacewith);
-    }else if contains(equRaw2.to_string(), 'X'.to_string())!=-1{
-        equNew = equRaw.replace('X', &replacewith);
-    }else{
-        equNew = equRaw;
-    }
-    return equNew;
-}
-fn contains(region: String, target: String) -> i32 {
-    let mut value:i32 = -1;
-    for i in 0..region.len() {
-        let current_let = &region[i..i + 1];
-        if current_let == target {
-            value = i as i32;
-            break;
-        }
-    }
-    return value;
-}
+
 
 fn graph(x1:&Vec<f32>, y1:&Vec<f32>, z1:&Vec<f32>){
     let mut corda;
