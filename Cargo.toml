@@ -10,8 +10,6 @@ edition = "2018"
 kiss3d = "0.23"
 nalgebra = "0.20.0"
 num = "0.2.1"
-once_cell = "1.3.1"
-pistoncore-input = "0.28.0"
 
 [dependencies.kiss-ui]
 git = "https://github.com/cybergeek94/kiss-ui"
