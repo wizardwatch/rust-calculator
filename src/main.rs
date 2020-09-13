@@ -149,9 +149,9 @@ fn passthrough(equation: String, min: String, max: String, rate: String, mut x1:
 fn graph(x1:&Vec<f32>, y1:&Vec<f32>, z1:&Vec<f32>){
     let mut corda;
     let mut cordb;
-    let boxx = [0.0,0.0, 0.0, 0.0, 0.0];
-    let boxy = [0.0,10.0, 0.0, -10.0,0.0];
-    let boxz = [0.0,0.0, 10.0, 0.0,-10.0];
+    let boxx = [0.0, 0.0, 0.0, 0.0, 0.0, 100.0, -100.0];
+    let boxy = [0.0, 100.0, 0.0, -100.0, 0.0, 0.0, 0.0];
+    let boxz = [0.0, 0.0, 100.0, 0.0, -100.0, 0.0, 0.0];
     let mut window = Window::new("Kiss3d: lines");
     let look = Point3::new(0.0, 1.0, -10.0);
     let start = Point3::new(0.0, 1.0, 0.0);
