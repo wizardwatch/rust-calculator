@@ -1,60 +1,22 @@
 #[macro_use]
-//imports crates. written by me and partner
-extern crate kiss_ui;
 extern crate kiss3d;
 extern crate nalgebra as na;
 extern crate num;
-use kiss_ui::prelude::*;
-use kiss_ui::container::*;
-use kiss_ui::dialog::Dialog;
-use kiss_ui::text::*;
-use kiss_ui::button::*;
+
 use kiss3d::light::Light;
 use kiss3d::window::Window;
+
 use na::Point3;
+
+use std::io;
+use std::env::args;
+use std::thread;
+
 mod solvestring;
 use crate::solvestring::solvestring::solve_string;
-fn main(){
-        kiss_ui::show_gui(|| {
-            Dialog::new(
-                Grid::new(
-                    children![
-                    Label::new("Enter a message:"),
-                    Label::new("Equation:"),
-                    TextBox::new()
-                        .set_visible_columns(20)
-                        .set_name("equ_raw"),
-                    Label::new("Minimum:"),
-                    TextBox::new()
-                        .set_visible_columns(20)
-                        .set_name("min"),
-                    Label::new("Maximum:"),
-                    TextBox::new()
-                        .set_visible_columns(20)
-                        .set_name("max"),
-                    Label::new("Rate:"),
-                    TextBox::new()
-                        .set_visible_columns(20)
-                        .set_name("rate"),
-                    Button::new()
-                        .set_label("Graph")
-                        .set_onclick(show_alert_message),
-                ]
-                )
-                    .set_ndiv(3 as u32)
 
-            )
-                .set_title("Hello, world!")
-                .set_size_pixels(640, 480)
-        });
-    use std::io;
-    let mut input = String::new();
-    match io::stdin().read_line(&mut input){
-        Ok(_) => {
-            println!("input received")
-        },
-        Err(_e) => println!("input faiwed owO. Pwease repowt to github uwu.")
-    }
+fn main(){
+    print!("not functional, go home")
 }
 
 fn replace(current: f32, equRaw: String) -> String {
@@ -116,21 +78,9 @@ fn show_alert_message(clicked: Button) {
     let x:Vec<f32> = vec![];
     let y:Vec<f32> = vec![];
     let z:Vec<f32> = vec![];
-    let dialog = clicked.get_dialog().unwrap();
-    let text_box1 = dialog.get_child("equ_raw").unwrap()
-        .try_downcast::<TextBox>().ok().expect("child equ_raw was not a TextBox!");
-    let equ = text_box1.get_text();
-    let text_box2 = dialog.get_child("min").unwrap()
-        .try_downcast::<TextBox>().ok().expect("child min was not a TextBox!");
-    let min = text_box2.get_text();
-    let text_box3 = dialog.get_child("max").unwrap()
-        .try_downcast::<TextBox>().ok().expect("child max was not a TextBox!");
-    let max = text_box3.get_text();
-    let text_box4 = dialog.get_child("rate").unwrap()
-        .try_downcast::<TextBox>().ok().expect("child rate was not a TextBox!");
-    let rate = text_box4.get_text();
-    dialog.hide();
-    passthrough(equ.to_string(), min.to_string(), max.to_string(), rate.to_string(), x, y, z);
+
+
+    //passthrough(equ.to_string(), min.to_string(), max.to_string(), rate.to_string(), x, y, z);
 }
 //declares and passes variables. Written By partner
 fn passthrough(equation: String, min: String, max: String, rate: String, mut x1: Vec<f32>, mut y1: Vec<f32>, mut z1: Vec<f32>){
