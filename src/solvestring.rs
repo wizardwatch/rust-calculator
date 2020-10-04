@@ -10,12 +10,13 @@ pub fn solve_string(mut input: String) -> f32 {
     let addition = "+";
     let subtraction = "~";
     let mut current_letter;
+    let mut before_letter= "l";
     let mut num_of_parth = 0;
     let mut most_inner_parth;
     let mut places_after_most_inner;
     let mut runner;
     //creates a clone of input in order to retain the original input.
-    let before_input = input.clone();
+    let mut before_input = input.clone();
     //adds parenthesis on either side of the equation.
     input = "".to_string();
     input.push_str("(");
@@ -26,6 +27,15 @@ pub fn solve_string(mut input: String) -> f32 {
         current_letter = &input[i..i + 1];
         if current_letter == "(" {
             num_of_parth = num_of_parth + 1
+        }
+    }
+    for i in 1..input.len() {
+        current_letter = &input[i..i + 1];
+        before_input = input.clone();
+        before_letter = &before_input[i - 1..i];
+        if (current_letter == "-") & (is_string_numeric(std::string::String::from(before_letter)) == true) {
+            input = "".to_string();
+            input.push_str(&((&before_input[0..i] as &str).to_owned() + "~" + &(before_input[i + 1..])));
         }
     }
     //runs the solving part of solve string once for each opening parenthesis
