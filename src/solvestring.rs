@@ -147,7 +147,7 @@ pub fn solve_string(mut input: String) -> f32 {
             if current_operator == subtraction {
                 answer = firstnumf32 - secnumf32;
             }
-            println!("{}", answer);
+
             //edits new input to equal new input minus the operator and numbers acted upon.
             let inputcash1 = &new_input.clone()[0 as usize..int_cop as usize - beforeplaces as usize];
             let inputcash2 = &answer.to_string() as &str;
@@ -170,7 +170,9 @@ pub fn solve_string(mut input: String) -> f32 {
         operator_places.clear();
     }
     //returns the answer as f32
+    println!("{}", answer);
     return answer;
+
 }
 
 //determines if the characters in a string are numeric. written by me
